@@ -1,0 +1,156 @@
+<!doctype html>                                                                                                                                                                                        
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        
+        <title>/fill指令生成器</title>
+        <!-- link -->
+        <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js'></script>
+        <script src="https://use.fontawesome.com/3493154a40.js"></script>
+        <link rel="stylesheet" href='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css'>
+        <script src='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js'></script>
+        
+        <style>
+            * {
+                padding:0;
+                margin:0;
+                font-family:"Lucida Console", Monaco, monospace,Arial, Helvetica, sans-serif;
+                user-select:none;
+                font-size:1.1em;
+            }
+            header > div:first-child {
+                background:#444;
+                width:100vw;
+                height:40vw;
+                position:relative;
+                overflow:hidden;
+            }
+            header > div:first-child > pre {
+                color:rgba(255,255,255,.5);
+                font-size:4.8em;
+                font-weight:bolder;
+                position:absolute;
+                bottom:0;
+                left:-.3em;
+            }
+            header > div:last-child {
+                box-sizing:border-box;
+                padding:1em;
+                width:100vw;
+                position:relative;
+                text-align:center;
+            }
+            header > div:last-child > div {
+                background:#111;
+                width:20vw;
+                height:10vw;
+                color:#eeeeee;
+                font-size:.8em;
+                font-weight:bolder;
+                position:absolute;
+                top:-8vw;
+                left:50%;
+                transform:translateX(-50%);
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            }
+            header > div:last-child > h1 {font-size:1.5em;}
+            header > div:last-child > p {font-size:.8em;}
+            main {
+                padding:1em;
+            }
+            .block {
+                border-top:lightgreen 1vw solid;
+                padding:5vw 2vw;
+                margin:5vw 0;
+                position:relative;
+            }
+            .block > h1 {
+                position:absolute;
+                top:-1.5em;
+                color:#222;
+            }
+            .block > label {
+                font-size:.8em;
+                display:inline-block;
+            }
+            .block > code {
+                background:#222;
+                color:#eee;
+                overflow-x:auto;
+                display:flex;
+                align-items:center;
+                font-size:.8em;
+                height:10vw;
+                width:80vw;
+                margin:auto;
+                white-space:nowrap;
+            }
+            label code {
+                display:inline;
+                background:#efe;
+                color:lightgreen;
+                border-radius:1vw;
+            }
+            input{
+                font-size:.9em;
+                outline-color:lightgreen;
+            }
+            input[type="text"] + div {
+                
+            }
+        </style>
+        <script>
+            $(function(){
+                $(document).autocomplete().tooltip();
+                $('.point').keyup(function(){
+                    this.value = this.value.replace(/^\s|\s{2}$|[^0-9~\-\.]/,'');
+                    let val = this.value;
+                    let points = val
+                    $(this).autocomplete({
+                        delay:0,
+                        source: [],
+                        minLength:-1,
+                        position:{my:'left bottom',at:'left top'}
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <header>
+            <div>
+                <pre>/fill</pre>
+            </div>
+            <div>
+                <div>生成器</div>
+                <h1>/fill生成器</h1>
+                <p>一个用于生成/fill命令和辅助学习/fill命令的一个工具</p>
+            </div>
+        </header>
+        <main>
+            <div class='block'>
+                <h1>简介和语法</h1>
+                <label>/fill是用于使用特定方块填充一个区域的全部或部分</label>
+                <label>语法：</label>
+                <code>/fill <自：x y z> <至：x y z> <方块：方块> [数据：整数] [destroy|hollow|keep|outline|replace] [替换方块名：方块] [替换方块数据：整数]</code>
+            </div>
+            <div class='block'>
+                <h1>范围</h1>
+                <label>/fill的范围用两个<code>[x y z]</code>的点来表示,也可以用<code>~</code>来表示</label>
+                <label>语法：</label>
+                <code>/fill <点一：x y z> <点二：x y z></code>
+                <label>你可以在下面填入坐标</label>
+                <br/>
+                <label>点一</label>
+                <input class='point' type='text'/>
+                <div>没有任何问题</div>
+                <label>点二</label>
+                <input class='point' type='text'/>
+                <div>没有任何问题</div>
+            </div>
+        </main>
+    </body>
+</html>
