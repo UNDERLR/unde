@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html>
+    
+    <head>
+        
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="user-scalable=no">
+        <title>scoreboard生成器</title>
+        
+        <!-- jquery  ui code -->
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+        <link rel="stylesheet" href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css">
+        <script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.js"></script>
+        
+        <style>
+            * {
+                box-sizing:border-box;
+                padding:0;
+                margin:0;
+                transition:.5s;
+                font-size:1.3em;
+                font-family:Arial, Helvetica, sans-serif;
+                outline:none;
+                user-select:none;
+            }
+            body {
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                background:#ddd;
+                min-height:100%;
+            }
+            main {min-height:90%;margin-top:15vw;}
+            #output {
+                position:fixed;
+                top:0;
+                left:0;
+                width:100vw;
+                z-index:100;
+            }
+            #output > * {box-shadow:2px 2px 10px rgba(0,0,0,.5);}
+            .open{transform:translateY(-121vw);}
+            #preview {
+                width:100vw;
+                height:120vw;
+                max-height:120vw;
+                border-radius:0 0 2vw 2vw;
+                margin:auto;
+                background:#222;
+                overflow-y:scroll;
+            }
+            #preview > div:not(:last-child) {border-bottom:solid 2px #555;}
+            #preview > div:not(:first-child) {margin-top:1vw;}
+            #preview > div {font-size:.8em;}
+            #preview > div > button {
+                color:#eee;
+                display:inline;
+                background:transparent;
+                padding:1vw 2vw;
+                border: 3px solid #eee;
+            }
+            #preview > div > code {
+                text-shadow:4px 4px #000;
+            }
+            #btn {
+                position:relative;
+                width:15vw;
+                height:10vw;
+                background:#eee;
+                margin:auto;
+                border-radius:0 0 5vw 5vw;
+            }
+            #btn div {
+                position:absolute;
+                top:3vw;
+                height:2vw;
+                width:8vw;
+                background:skyblue;
+                border-radius:1vw;
+            }
+            #btn div:first-child {
+                left:1.4vw;
+                transform:rotate(-45deg);
+            }
+            #btn div:last-child {
+                right:1.4vw;
+                transform:rotate(45deg);
+            }
+            .open #btn div {top:4vw;}
+            .open #btn div:first-child {transform:rotate(45deg);}
+            .open #btn div:last-child {transform:rotate(-45deg);}
+            main > .class:not(:first-child) {margin-top:10vw;}
+            .class {
+                padding:8vw 2vw;
+                position:relative;
+                background:#eee;
+                width:95vw;
+                min-height:20vw;
+            }
+            .class > h1 {
+                position:absolute;
+                top:0;
+                left:0;
+                background:#efefef;
+                transform:translateY(-80%);
+                border-bottom:5px solid skyblue;
+                padding:0 1vw;
+            }
+            .class > div:not(:first-child) {margin-top:1vw;}
+            .option {
+                font-size:.9em;
+                display:flex;
+                position:relative;
+            }
+            .option > button {
+                background:#eee;
+                border-color:skyblue;
+                position:absolute;
+                right:0;
+            }
+            #copy{display:none;}
+            .block {
+                padding:2vw;
+                margin:10vw auto;
+                position:relative;
+                font-size:.85em;
+                width:95%;
+                min-height:20vw;
+                border-top:3px solid skyblue;
+                border-bottom:3px solid skyblue;
+            }
+            .block > p {
+                position:absolute;
+                left:50%;
+                background:#efefef;
+                transform:translate(-50%,-120%);
+                padding:0 1vw;
+            }
+            .block > button {
+                border-color:skyblue;
+                background:#eee;
+                margin:2vw 0;
+                margin-left:50%;
+                transform:translateX(-50%);
+                padding:.5vw 10vw;
+            }
+            .wed{
+                position:fixed;
+                left:0;
+                top:0;
+                background:skyblue;
+                width:100vw;
+                height:100vh;
+                z-index:1000;
+            }
+            input[type='text']:not(.range ~ .ui-spinner) {
+                background:transparent;
+                border:none;
+                border-bottom:2px #555 solid;
+                padding-left:2vw;
+            }
+            input[type='text']:not(.range ~ .ui-spinner):focus {border-bottom:5px skyblue solid;}
+            .class button:focus,
+            select:focus {
+                color:#fff;
+                background:skyblue;
+            }
+            select {
+                -webkit-appearance:none;
+                background:#00000000;
+                text-align:center;
+                text-align-last:center;
+                border-color:skyblue;
+            }
+            .wed h1 {font-size:3em;}.wed p {font-size:2.5em;}
+            .range ~ .ui-spinner{width:35vw;}
+            .c{color:#555555;}.p1{color:#55FFFF;}.p2{color:#55FF55;}.p3,.n2{color:#FFFF55;}.n{color:#5555ff;}
+        </style>
+        
+        <script>
+            $(function() {
+                $( ".spinner" ).spinner();
+            });
+            $(function(){
+                $('#btn').click(function(){
+                    $('#output').toggleClass('open',1000);
+                });
+            });
+            function out(cmd,view) {
+                alert('生成成功,已输出至窗口');
+                $('#preview').prepend(`<div><button data-text='${cmd}' onclick='copy()'>复制此行</button><code>${view}</code></div>`);
+            }
+            function copy() {
+                $("#copy").val($(document.activeElement).attr('data-text'));
+                $("#copy").css('display','inline');
+                $("#copy").select();
+                document.execCommand('Copy');
+                alert('复制成功');
+                $('#copy').css('display','none');
+            }
+        </script>
+        
+    </head>
+    
+    <body onload="$('.wed').css('display','none');">
+        <input id='copy'/>
+        <div id='output' class='open'>
+            <div id='preview'></div>
+            <div id='btn'>
+                <div class='a'></div>
+                <div class='b'></div>
+            </div>
+        </div>
+        <div class='wed'>
+            <h1>无法正常加载网页:(</h1>
+            <p>可能有以下几个原因：</p>
+            <ol>
+                <li>无网络链接</li>
+                <li>脚本无法加载</li>
+                <li>浏览器版本过低</li>
+            </ol>
+        </div>
+        <main>
+            <div class='class'>
+                <h1>列出</h1>
+                <div class='option'>
+                    <p>列出所有记分板</p>
+                    <button onclick='out("/scoreboard objectives list","<span class=\"c\">/scoreboard objectives list</span>")'>生成</button>
+                </div>
+                <div class='option'>
+                    <p>列出所有被追踪的目标</p>
+                    <button onclick='out("/scoreboard players list","<span class=\"c\">/scoreboard players list</span>")'>生成</button>
+                </div>
+            </div>
+            <div class='class'>
+                <h1>记分板相关</h1>
+                <div class='block'>
+                    <p>创建记分板</p>
+                    <label>记分板名称：</label>
+                    <input id='t1' type='text' maxlength='16'/>
+                    <br/>
+                    <label>记分板显示名称：</label>
+                    <input id='t2' type='text' maxlength='16'/>
+                    <br/>
+                    <button onclick='out("/scoreboard objectives add "+$("#t1").val()+" dummy "+$("#t2").val(),"<span class=\"c\">/scoreboard objectives add </span><span class=\"p1\">"+$("#t1").val()+"</span><span class=\"p2\"> dummy </span><span class=\"p3\">"+$("#t2").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>设置显示位置</p>
+                    <label>显示位置：</label>
+                    <select onchange='document.getElementById("position").selectedIndex=this.selectedIndex;'>
+                        <option>侧边栏</option>
+                        <option>名字下方</option>
+                        <option>玩家列表</option>
+                    </select>
+                    <select id='position' style='display:none'>
+                        <option>sidebar</option>
+                        <option>belowname</option>
+                        <option>list</option>
+                    </select>
+                    <br/>
+                    <label>记分板名称：</label>
+                    <input id='t3' type='text' maxlength='16'/>
+                    <br/>
+                    <button onclick='out("/scoreboard objectives setdisplay "+document.getElementById("position").options[document.getElementById("position").selectedIndex].text+" "+$("#t3").val(),"<span class=\"c\">/scoreboard objectives setdisplay</span><span class=\"p2\"> " + document.getElementById("position").options[document.getElementById("position").selectedIndex].text+"</span> <span class=\"p1\">"+$("#t3").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>删除记分板</p>
+                    <label>记分板名称：</label>
+                    <input id='t4' type='text' maxlength='16'/>
+                    <br/>
+                    <button onclick='out("/scoreboard objectives remove " + $("#t4").val(),"<span class=\"c\">/scoreboard objectives remove <span class=\"p1\">"+$("#t4").val()+"</span>")'>生成</button>
+                </div>
+            </div>
+            <div class='class'>
+                <h1>玩家相关</h1>
+                <div class='block'>
+                    <p>添加分数</p>
+                    <label>玩家名或选择器:</label>
+                    <input id='p1' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称:</label>
+                    <input id='p2' type='text' maxlength='16'/>
+                    <br/>
+                    <label>分数:(请不要使用小数)</label>
+                    <input class='spinner' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < 0) alert("警告：数值错误");' id='p3' type='number'/>
+                    <br/>
+                    <button onclick='out("/scoreboard players add "+$("#p1").val()+" "+$("#p2").val()+" "+$("#p3").val(),"<span class=\"c\">/scoreboard players add</span> <span class=\"p2\">"+$("#p1").val()+"</span> <span class=\"p1\">"+$("#p2").val()+"</span> <span class=\"n\">"+$("#p3").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>减少分数</p>
+                    <label>玩家名或选择器:</label>
+                    <input id='p4' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称:</label>
+                    <input id='p5' type='text' maxlength='16'/>
+                    <br/>
+                    <label>分数:(请不要使用小数)</label>
+                    <input class='spinner' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < 0) alert("警告：数值错误");' id='p3' type='number'/>
+                    <br/>
+                    <button onclick='out("/scoreboard players remove "+$("#p4").val()+" "+$("#p5").val()+" "+$("#p6").val(),"<span class=\"c\">/scoreboard players remove</span> <span class=\"p2\">"+$("#p4").val()+"</span> <span class=\"p1\">"+$("#p5").val()+"</span> <span class=\"n\">"+$("#p6").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>设置分数</p>
+                    <label>玩家名或选择器:</label>
+                    <input id='p9' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称:</label>
+                    <input id='pa' type='text' maxlength='16'/>
+                    <br/>
+                    <label>分数:(请不要使用小数)</label>
+                    <input class='spinner' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < -2147483648) alert("警告数值错误");' id='pa1' type='number'/>
+                    <br/>
+                    <button onclick='out("/scoreboard players set "+$("#p9").val()+" "+$("#pa").val()+" "+$("#pa1").val(),"<span class=\"c\">/scoreboard players set</span> <span class=\"p2\">"+$("#p9").val()+"</span> <span class=\"p1\">"+$("#pa").val()+"</span> <span class=\"n\">"+$("#pa1").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>删除分数</p>
+                    <label>玩家名或选择器:</label>
+                    <input id='p7' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称:</label>
+                    <input id='p8' type='text' maxlength='16'/>
+                    <br/>
+                    <button onclick='out("/scoreboard players reset "+$("#p7").val()+" "+$("#p8").val(),"<span class=\"c\">/scoreboard players reset</span> <span class=\"p2\">"+$("#p7").val()+"</span> <span class=\"p1\">"+$("#p8").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>测试分数</p>
+                    <label>玩家名或选择器：</label>
+                    <input id='pa2' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称：</label>
+                    <input id='pa3' type='text' maxlength='16'/>
+                    <br/>
+                    <label class='range'>范围</label>
+                    <br/>
+                    <input class='spinner' placeholder='*' onkeyup='this.value = this.value.replace(/^(\.\d\*)/g,"");//if (this.value * 1 % 1 !== 0 || this.value * 1 > 2147483647 || this.value * 1 < -2147483648) alert("警告数值错误");' id='pa4' type='text'/>
+                    ----
+                    <input class='spinner' placeholder='可放空' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < -2147483648) alert("警告数值错误");' id='pa5' type='number'/>
+                    <button onclick='out("/scoreboard players test "+$("#pa2").val()+" "+$("#pa3").val()+" "+$("#pa4").val()+" "+$("#pa5").val(),"<span class=\"c\">/scoreboard players test</span> <span class=\"p2\">"+$("#pa2").val()+"</span> <span class=\"p1\">"+$("#pa3").val()+"</span> <span class=\"n\">"+$("#pa4").val()+"</span> <span class=\"n2\">"+$("#pa5").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>随机分数</p>
+                    <label>玩家名或选择器：</label>
+                    <input id='pa6' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称：</label>
+                    <input id='pa7' type='text' maxlength='16'/>
+                    <br/>
+                    <label class='range'>范围</label>
+                    <br/>
+                    <input class='spinner' placeholder='*' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < -2147483648) alert("警告数值错误");' id='pa8' type='number'/>
+                    ----
+                    <input class='spinner' placeholder='可放空' onkeyup='if (this.value % 1 !== 0 || this.value > 2147483647 || this.value < -2147483648) alert("警告数值错误");' id='pa9' type='number'/>
+                    <button onclick='out("/scoreboard players random "+$("#pa6").val()+" "+$("#pa7").val()+" "+$("#pa8").val()+" "+$("#pa9").val(),"<span class=\"c\">/scoreboard players random</span> <span class=\"p2\">"+$("#pa6").val()+"</span> <span class=\"p1\">"+$("#pa7").val()+"</span> <span class=\"n\">"+$("#pa8").val()+"</span> <span class=\"n2\">"+$("#pa9").val()+"</span>")'>生成</button>
+                </div>
+                <div class='block'>
+                    <p>计算分数</p>
+                    <label>玩家名或选择器：</label>
+                    <input id='pb2' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称：</label>
+                    <input id='pb3' type='text' maxlength='16'/>
+                    <br/>
+                    <label>计算方式：</label>
+                    <select onchange='document.getElementById("op").selectedIndex=this.selectedIndex;'>
+                        <option>求余</option>
+                        <option>相乘</option>
+                        <option>相加</option>
+                        <option>相减</option>
+                        <option>相除</option>
+                        <option>取小</option>
+                        <option>赋值</option>
+                        <option>取大</option>
+                        <option>交换</option>
+                    </select>
+                    <br/>
+                    <select id='op' style='display:none'>
+                        <option>%=</option>
+                        <option>*=</option>
+                        <option>+=</option>
+                        <option>-=</option>
+                        <option>/=</option>
+                        <option><</option>
+                        <option>=</option>
+                        <option>></option>
+                        <option>><</option>
+                    </select>
+                    <label>玩家名或选择器：</label>
+                    <input id='pb' type='text' placeholder='*' onkeyup='if(this.value.length == 16)alert("已达到16位字符（如果是选择器请无视）");'/>
+                    <br/>
+                    <label>记分板名称：</label>
+                    <input id='pb1' type='text' maxlength='16'/>
+                    <br/>
+                    <button onclick='out("/scoreboard players operation "+$("#pb2").val()+" "+$("#pb3").val()+" "+document.getElementById("op").options[document.getElementById("op").selectedIndex].text+" "+$("#pb").val()+" "+$("#pb1").val(),"<span class=\"c\">/scoreboard players operation</span> <span class=\"p1\">"+$("#pb2").val()+"</span> <span class=\"p3\">"+$("#pb3").val()+"</span> <span class=\"p2\">"+document.getElementById("op").options[document.getElementById("op").selectedIndex].text+"</span> <span class=\"p1\">"+$("#pb").val()+"</span> <span class=\"p3\">"+$("#pb1").val()+"</span>");'>生成</button>
+                </div>
+            </div>
+        </main>
+    </body>
+    
+</html>
