@@ -1,0 +1,779 @@
+<!doctype html>                                                                                                                                                                                        
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        
+        <title>/fill指令生成器</title>
+        <!-- link -->
+        <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js'></script>
+        <script src='https://underlr.github.io/unde.github.io/fa/all.min.js'></script>
+        <link rel='stylesheet' href='https://underlr.github.io/unde.github.io/fa/all.min.css'>
+        <link rel="stylesheet" href='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css'>
+        <script src='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js'></script>
+        
+        <style>
+            * {
+                padding:0;
+                margin:0;
+                font-family:"Lucida Console", Monaco, monospace,Arial, Helvetica, sans-serif;
+                user-select:none;
+                font-size:1.1em;
+            }
+            header > div:first-child {
+                background:#444;
+                width:100vw;
+                height:40vw;
+                position:relative;
+                overflow:hidden;
+            }
+            header > div:first-child > pre {
+                color:rgba(255,255,255,.5);
+                font-size:4.8em;
+                font-weight:bolder;
+                position:absolute;
+                bottom:0;
+                left:-.3em;
+            }
+            header > div:last-child {
+                box-sizing:border-box;
+                padding:1em;
+                width:100vw;
+                position:relative;
+                text-align:center;
+            }
+            header > div:last-child > div {
+                background:#111;
+                width:20vw;
+                height:10vw;
+                color:#eeeeee;
+                font-size:.8em;
+                font-weight:bolder;
+                position:absolute;
+                top:-8vw;
+                left:50%;
+                transform:translateX(-50%);
+                display:flex;
+                justify-content:center;
+                align-items:center;
+            }
+            header > div:last-child > h1 {font-size:1.5em;}
+            header > div:last-child > p {font-size:.8em;}
+            main {
+                padding:1em;
+            }
+            .block {
+                border-top:lightgreen 1vw solid;
+                padding:5vw 2vw;
+                margin:5vw 0;
+                position:relative;
+            }
+            .block > h1 {
+                position:absolute;
+                top:-1.5em;
+                color:#222;
+            }
+            .block > label {
+                font-size:.8em;
+                display:inline-block;
+            }
+            .block > code {
+                background:#222;
+                color:#eee;
+                overflow-x:auto;
+                display:flex;
+                align-items:center;
+                font-size:.8em;
+                height:10vw;
+                width:80vw;
+                margin:auto;
+                white-space:nowrap;
+            }
+            label code {
+                display:inline;
+                background:#efe;
+                color:lightgreen;
+                border-radius:1vw;
+            }
+            input{
+                font-size:.9em;
+                outline-color:lightgreen;
+                width:80vw;
+            }
+            input[type="text"] + div {
+                position:absolute;
+                font-size:.8em;
+                background:#eee;
+                width:80vw;
+                border:1px solid lightgreen;
+                transform:translateY(-100%);
+                opacity:0;
+                z-index:-1;
+                transition:.5s;
+            }
+            input[type="text"]:hover + div {
+                transform:translateY(0);
+                opacity:1;
+                z-index:1;
+            }
+            .ui-autocomplete {
+                font-size:.8em;
+                max-height:50vw;
+                width:50vw;
+                overflow-y:scroll;
+            }
+            select {
+                font-size:.8em;
+                outline-color:lightgreen;
+                background:#fff;
+            }
+            button {
+                font-size:.8em;
+                margin:auto;
+                display:block;
+                background:#fff;
+                border-width:2px;
+                outline-color:lightgreen;
+            }
+        </style>
+        <script>
+            $(function(){
+                $('*').autocomplete();
+                $('.point').keyup(function(){
+                    this.value = this.value.replace(/^\s|\s{2}$|[^0-9~\-\.\s^]/,'');
+                    let val = this.value;
+                    let points = val.split(' ');
+                    if(!points[0])points[0]='~';
+                    if(!points[1])points[1]='~';
+                    if(!points[2])points[2]='~';
+                    $(this).autocomplete({
+                        delay:0,
+                        source: [
+                            `${points[0]} `,
+                            `${points[0]} ${points[1]} `,
+                            `${points[0]} ${points[1]} ${points[2]}`
+                            ],
+                        minLength:-1,
+                        position:{my:'left bottom',at:'left top'}
+                    });
+                    if (/(\d*\s*[~^]){4,}|\s+\d+[~^]/g.test(val)) {
+                        let et = val.match(/(\d*\s*[~^]){4,}|\s+\d+[~^]/g);
+                        $('input:hover+div').html(`<i class='fad fa-times-square fa-fw'></i>错误:错误的${et}`).css('border','#ff6b81 1vw solid').css('color','#ff4757');
+                    }else if (/(\d*[~^]){2,}|\d+~/g.test(val)) {
+                        let et = val.match(/(\d*\s*[~^]){2,}|\d+~/g);
+                        $('input:hover+div').html(`<i class='fad fa-exclamation-square fa-fw'></i>警告:语法不规范(${et})`).css('border','#eccc68 .5vw solid').css('color','#ffa502');
+                    }else{
+                        $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border','').css('color','');
+                    }
+                });
+                $('.blocks').keyup(function(){
+                    this.value = this.value.replace(/[^a-z0-9_:\-]/,'');
+                    let val = this.value;
+                    $(this).autocomplete({
+                        delay:0,
+                        source: [
+{label:"空气-air-0",value:"air"},
+{label:"石头-stone-1",value:"stone"},
+{label:"草方块-grass-2",value:"grass"},
+{label:"泥土-dirt-3",value:"dirt"},
+{label:"圆石-cobblestone-4",value:"cobblestone"},
+{label:"木板-planks-5",value:"planks"},
+{label:"树苗-sapling-6",value:"sapling"},
+{label:"基岩-bedrock-7",value:"bedrock"},
+{label:"水-flowing_water-8",value:"flowing_water"},
+{label:"静态水-water-9",value:"water"},
+{label:"熔岩-flowing_lava-10",value:"flowing_lava"},
+{label:"静态熔岩-lava-11",value:"lava"},
+{label:"沙子-sand-12",value:"sand"},
+{label:"沙砾-gravel-13",value:"gravel"},
+{label:"金矿石-gold_ore-14",value:"gold_ore"},
+{label:"铁矿石-iron_ore-15",value:"iron_ore"},
+{label:"煤矿石-coal_ore-16",value:"coal_ore"},
+{label:"原木-log-17",value:"log"},
+{label:"树叶-leaves-18",value:"leaves"},
+{label:"海绵-sponge-19",value:"sponge"},
+{label:"玻璃-glass-20",value:"glass"},
+{label:"青金石矿石-lapis_ore-21",value:"lapis_ore"},
+{label:"青金石块-lapis_block-22",value:"lapis_block"},
+{label:"发射器-dispenser-23",value:"dispenser"},
+{label:"砂岩-sandstone-24",value:"sandstone"},
+{label:"音符盒-noteblock-25",value:"noteblock"},
+{label:"床-bed-26",value:"bed"},
+{label:"充能铁轨-golden_rail-27",value:"golden_rail"},
+{label:"探测铁轨-detector_rail-28",value:"detector_rail"},
+{label:"粘性活塞-sticky_piston-29",value:"sticky_piston"},
+{label:"蜘蛛网-web-30",value:"web"},
+{label:"高草丛-tallgrass-31",value:"tallgrass"},
+{label:"枯萎的灌木-deadbush-32",value:"deadbush"},
+{label:"活塞-piston-33",value:"piston"},
+{label:"活塞臂-pistonarmcollision-34",value:"pistonarmcollision"},
+{label:"羊毛-wool-35",value:"wool"},
+{label:"未知元素（???）-element_0-36",value:"element_0"},
+{label:"蒲公英-yellow_flower-37",value:"yellow_flower"},
+{label:"花-red_flower-38",value:"red_flower"},
+{label:"棕色蘑菇-brown_mushroom-39",value:"brown_mushroom"},
+{label:"红色蘑菇-red_mushroom-40",value:"red_mushroom"},
+{label:"金块-gold_block-41",value:"gold_block"},
+{label:"铁块-iron_block-42",value:"iron_block"},
+{label:"双石台阶-double_stone_slab-43",value:"double_stone_slab"},
+{label:"石台阶-stone_slab-44",value:"stone_slab"},
+{label:"砖块-brick_block-45",value:"brick_block"},
+{label:"TNT-tnt-46",value:"tnt"},
+{label:"书架-bookshelf-47",value:"bookshelf"},
+{label:"苔石-mossy_cobblestone-48",value:"mossy_cobblestone"},
+{label:"黑曜石-obsidian-49",value:"obsidian"},
+{label:"火把-torch-50",value:"torch"},
+{label:"火-fire-51",value:"fire"},
+{label:"刷怪箱-mob_spawner-52",value:"mob_spawner"},
+{label:"橡木楼梯-oak_stairs-53",value:"oak_stairs"},
+{label:"箱子-chest-54",value:"chest"},
+{label:"红石线-redstone_wire-55",value:"redstone_wire"},
+{label:"钻石矿石-diamond_ore-56",value:"diamond_ore"},
+{label:"钻石块-diamond_block-57",value:"diamond_block"},
+{label:"工作台-crafting_table-58",value:"crafting_table"},
+{label:"小麦-wheat-59",value:"wheat"},
+{label:"耕地-farmland-60",value:"farmland"},
+{label:"熔炉-furnace-61",value:"furnace"},
+{label:"燃烧的熔炉-lit_furnace-62",value:"lit_furnace"},
+{label:"橡木告示牌-standing_sign-63",value:"standing_sign"},
+{label:"橡木门-wooden_door-64",value:"wooden_door"},
+{label:"梯子-ladder-65",value:"ladder"},
+{label:"铁轨-rail-66",value:"rail"},
+{label:"圆石楼梯-stone_stairs-67",value:"stone_stairs"},
+{label:"墙上的橡木告示牌-wall_sign-68",value:"wall_sign"},
+{label:"拉杆-lever-69",value:"lever"},
+{label:"石质压力板-stone_pressure_plate-70",value:"stone_pressure_plate"},
+{label:"铁门-iron_door-71",value:"iron_door"},
+{label:"木质压力板-wooden_pressure_plate-72",value:"wooden_pressure_plate"},
+{label:"红石矿石-redstone_ore-73",value:"redstone_ore"},
+{label:"发光的红石矿石-lit_redstone_ore-74",value:"lit_redstone_ore"},
+{label:"熄灭的红石火把-unlit_redstone_torch-75",value:"unlit_redstone_torch"},
+{label:"红石火把-redstone_torch-76",value:"redstone_torch"},
+{label:"石质按钮-stone_button-77",value:"stone_button"},
+{label:"顶层雪-snow_layer-78",value:"snow_layer"},
+{label:"冰-ice-79",value:"ice"},
+{label:"雪-snow-80",value:"snow"},
+{label:"仙人掌-cactus-81",value:"cactus"},
+{label:"粘土块-clay-82",value:"clay"},
+{label:"甘蔗-reeds-83",value:"reeds"},
+{label:"唱片机-jukebox-84",value:"jukebox"},
+{label:"橡木栅栏-fence-85",value:"fence"},
+{label:"南瓜-pumpkin-86",value:"pumpkin"},
+{label:"地狱岩-netherrack-87",value:"netherrack"},
+{label:"灵魂沙-soul_sand-88",value:"soul_sand"},
+{label:"荧石-glowstone-89",value:"glowstone"},
+{label:"下界传送门-portal-90",value:"portal"},
+{label:"南瓜灯-lit_pumpkin-91",value:"lit_pumpkin"},
+{label:"蛋糕-cake-92",value:"cake"},
+{label:"红石中继器（未开启）-unpowered_repeater-93",value:"unpowered_repeater"},
+{label:"红石中继器（已开启）-powered_repeater-94",value:"powered_repeater"},
+{label:"隐形的基岩-invisibleedrock-95",value:"invisibleedrock"},
+{label:"活板门-trapdoor-96",value:"trapdoor"},
+{label:"被虫蚀的方块-monster_egg-97",value:"monster_egg"},
+{label:"石砖-stonebrick-98",value:"stonebrick"},
+{label:"棕色蘑菇方块-brown_mushroom_block-99",value:"brown_mushroom_block"},
+{label:"红色蘑菇方块-red_mushroom_block-100",value:"red_mushroom_block"},
+{label:"铁栏杆-iron_bars-101",value:"iron_bars"},
+{label:"玻璃板-glass_pane-102",value:"glass_pane"},
+{label:"西瓜-melon_block-103",value:"melon_block"},
+{label:"南瓜梗-pumpkin_stem-104",value:"pumpkin_stem"},
+{label:"西瓜梗-melon_stem-105",value:"melon_stem"},
+{label:"藤蔓-vine-106",value:"vine"},
+{label:"橡木栅栏门-fence_gate-107",value:"fence_gate"},
+{label:"砖楼梯-brick_stairs-108",value:"brick_stairs"},
+{label:"石砖楼梯-stone_brick_stairs-109",value:"stone_brick_stairs"},
+{label:"菌丝-mycelium-110",value:"mycelium"},
+{label:"睡莲-waterlily-111",value:"waterlily"},
+{label:"地狱砖-nether_brick-112",value:"nether_brick"},
+{label:"地狱砖栅栏-nether_brick_fence-113",value:"nether_brick_fence"},
+{label:"地狱砖楼梯-nether_brick_stairs-114",value:"nether_brick_stairs"},
+{label:"地狱疣-nether_wart-115",value:"nether_wart"},
+{label:"附魔台-enchanting_table-116",value:"enchanting_table"},
+{label:"酿造台-brewing_stand-117",value:"brewing_stand"},
+{label:"炼药锅-cauldron-118",value:"cauldron"},
+{label:"末地传送门方块-end_portal-119",value:"end_portal"},
+{label:"末地传送门框架-end_portal_frame-120",value:"end_portal_frame"},
+{label:"末地石-end_stone-121",value:"end_stone"},
+{label:"龙蛋-dragon_egg-122",value:"dragon_egg"},
+{label:"红石灯（未开启）-redstone_lamp-123",value:"redstone_lamp"},
+{label:"红石灯（已开启）-lit_redstone_lamp-124",value:"lit_redstone_lamp"},
+{label:"投掷器-dropper-125",value:"dropper"},
+{label:"激活铁轨-activator_rail-126",value:"activator_rail"},
+{label:"可可果-cocoa-127",value:"cocoa"},
+{label:"砂岩楼梯-sandstone_stairs-128",value:"sandstone_stairs"},
+{label:"绿宝石矿石-emerald_ore-129",value:"emerald_ore"},
+{label:"末影箱-ender_chest-130",value:"ender_chest"},
+{label:"绊线钩-tripwire_hook-131",value:"tripwire_hook"},
+{label:"绊线-tripwire-132",value:"tripwire"},
+{label:"绿宝石块-emerald_block-133",value:"emerald_block"},
+{label:"云杉楼梯-spruce_stairs-134",value:"spruce_stairs"},
+{label:"白桦木楼梯-birch_stairs-135",value:"birch_stairs"},
+{label:"丛林楼梯-jungle_stairs-136",value:"jungle_stairs"},
+{label:"脉冲型命令方块-command_block-137",value:"command_block"},
+{label:"信标-beacon-138",value:"beacon"},
+{label:"圆石墙-cobblestone_wall-139",value:"cobblestone_wall"},
+{label:"花盆-flower_pot-140",value:"flower_pot"},
+{label:"胡萝卜-carrots-141",value:"carrots"},
+{label:"马铃薯-potatoes-142",value:"potatoes"},
+{label:"橡木按钮-wooden_button-143",value:"wooden_button"},
+{label:"生物头颅-skull-144",value:"skull"},
+{label:"铁砧-anvil-145",value:"anvil"},
+{label:"陷阱箱-trapped_chest-146",value:"trapped_chest"},
+{label:"测重压力板（轻质）-light_weighted_pressure_plate-147",value:"light_weighted_pressure_plate"},
+{label:"测重压力板（重质）-heavy_weighted_pressure_plate-148",value:"heavy_weighted_pressure_plate"},
+{label:"红石比较器（未开启）-unpowered_comparator-149",value:"unpowered_comparator"},
+{label:"红石比较器（已开启）-powered_comparator-150",value:"powered_comparator"},
+{label:"阳光探测器-daylight_detector-151",value:"daylight_detector"},
+{label:"红石块-redstone_block-152",value:"redstone_block"},
+{label:"下界石英矿石-quartz_ore-153",value:"quartz_ore"},
+{label:"漏斗-hopper-154",value:"hopper"},
+{label:"石英块-quartz_block-155",value:"quartz_block"},
+{label:"石英楼梯-quartz_stairs-156",value:"quartz_stairs"},
+{label:"双木台阶-double_wooden_slab-157",value:"double_wooden_slab"},
+{label:"木质台阶-wooden_slab-158",value:"wooden_slab"},
+{label:"染色陶瓦-stained_hardened_clay-159",value:"stained_hardened_clay"},
+{label:"染色玻璃板-stained_glass_pane-160",value:"stained_glass_pane"},
+{label:"金合欢树叶-leaves2-161",value:"leaves2"},
+{label:"金合欢原木-log2-162",value:"log2"},
+{label:"金合欢台阶-acacia_stairs-163",value:"acacia_stairs"},
+{label:"深色橡木楼梯-dark_oak_stairs-164",value:"dark_oak_stairs"},
+{label:"粘液块-slime-165",value:"slime"},
+{label:"铁活板门-iron_trapdoor-167",value:"iron_trapdoor"},
+{label:"海晶石-prismarine-168",value:"prismarine"},
+{label:"海晶灯-seaLantern-169",value:"seaLantern"},
+{label:"干草块-hay_block-170",value:"hay_block"},
+{label:"地毯-carpet-171",value:"carpet"},
+{label:"陶瓦-hardened_clay-172",value:"hardened_clay"},
+{label:"煤炭块-coal_block-173",value:"coal_block"},
+{label:"浮冰-packed_ice-174",value:"packed_ice"},
+{label:"向日葵-double_plant-175",value:"double_plant"},
+{label:"站立的旗帜-standing_banner-176",value:"standing_banner"},
+{label:"墙上的旗帜-wall_banner-177",value:"wall_banner"},
+{label:"反向阳光传感器-daylight_detector_inverted-178",value:"daylight_detector_inverted"},
+{label:"红砂岩-red_sandstone-179",value:"red_sandstone"},
+{label:"红砂岩楼梯-red_sandstone_stairs-180",value:"red_sandstone_stairs"},
+{label:"双红砂岩台阶-double_stone_slab2-181",value:"double_stone_slab2"},
+{label:"红砂岩台阶-stone_slab2-182",value:"stone_slab2"},
+{label:"云杉木栅栏门-spruce_fence_gate-183",value:"spruce_fence_gate"},
+{label:"白桦木栅栏门-birch_fence_gate-184",value:"birch_fence_gate"},
+{label:"丛林木栅栏门-jungle_fence_gate-185",value:"jungle_fence_gate"},
+{label:"深色橡木栅栏门-dark_oak_fence_gate-186",value:"dark_oak_fence_gate"},
+{label:"金合欢木栅栏门-acacia_fence_gate-187",value:"acacia_fence_gate"},
+{label:"循环型命令方块-repeating_command_block-188",value:"repeating_command_block"},
+{label:"连锁型命令方块-chain_command_block-189",value:"chain_command_block"},
+{label:"强化玻璃板-hard_glass_pane-190",value:"hard_glass_pane"},
+{label:"染色强化玻璃板-hard_stained_glass_pane-191",value:"hard_stained_glass_pane"},
+{label:"加热块-chemical_heat-192",value:"chemical_heat"},
+{label:"云杉木门-spruce_door-193",value:"spruce_door"},
+{label:"白桦木门-birch_door-194",value:"birch_door"},
+{label:"丛林木门-jungle_door-195",value:"jungle_door"},
+{label:"金合欢木门-acacia_door-196",value:"acacia_door"},
+{label:"深色橡木门-dark_oak_door-197",value:"dark_oak_door"},
+{label:"草径-grass_path-198",value:"grass_path"},
+{label:"物品展示框-frame-199",value:"frame"},
+{label:"紫颂花-chorus_flower-200",value:"chorus_flower"},
+{label:"紫珀块-purpur_block-201",value:"purpur_block"},
+{label:"红色火把-colored_torch_rg-202",value:"colored_torch_rg"},
+{label:"紫珀楼梯-purpur_stairs-203",value:"purpur_stairs"},
+{label:"蓝色火把-colored_torch_bp-204",value:"colored_torch_bp"},
+{label:"未染色的潜影盒-undyed_shulker_box-205",value:"undyed_shulker_box"},
+{label:"末地石砖-end_bricks-206",value:"end_bricks"},
+{label:"霜冰-frosted_ice-207",value:"frosted_ice"},
+{label:"末地烛-end_rod-208",value:"end_rod"},
+{label:"末地折跃门方块-end_gateway-209",value:"end_gateway"},
+{label:"岩浆块-magma-213",value:"magma"},
+{label:"地狱疣块-nether_wart_block-214",value:"nether_wart_block"},
+{label:"红色地狱砖块-red_nether_brick-215",value:"red_nether_brick"},
+{label:"骨块-bone_block-216",value:"bone_block"},
+{label:"结构空位-structure_void-217",value:"structure_void"},
+{label:"潜影盒-shulker_box-218",value:"shulker_box"},
+{label:"紫色带釉陶瓦-purple_glazed_terracotta-219",value:"purple_glazed_terracotta"},
+{label:"白色带釉陶瓦-white_glazed_terracotta-220",value:"white_glazed_terracotta"},
+{label:"橙色带釉陶瓦-orange_glazed_terracotta-221",value:"orange_glazed_terracotta"},
+{label:"品红色带釉陶瓦-magenta_glazed_terracotta-222",value:"magenta_glazed_terracotta"},
+{label:"淡蓝色带釉陶瓦-light_blue_glazed_terracotta-223",value:"light_blue_glazed_terracotta"},
+{label:"黄色带釉陶瓦-yellow_glazed_terracotta-224",value:"yellow_glazed_terracotta"},
+{label:"黄绿色带釉陶瓦-lime_glazed_terracotta-225",value:"lime_glazed_terracotta"},
+{label:"粉红色带釉陶瓦-pink_glazed_terracotta-226",value:"pink_glazed_terracotta"},
+{label:"灰色带釉陶瓦-gray_glazed_terracotta-227",value:"gray_glazed_terracotta"},
+{label:"淡灰色带釉陶瓦-silver_glazed_terracotta-228",value:"silver_glazed_terracotta"},
+{label:"青色带釉陶瓦-cyan_glazed_terracotta-229",value:"cyan_glazed_terracotta"},
+{label:"蓝色带釉陶瓦-blue_glazed_terracotta-231",value:"blue_glazed_terracotta"},
+{label:"棕色带釉陶瓦-brown_glazed_terracotta-232",value:"brown_glazed_terracotta"},
+{label:"绿色带釉陶瓦-green_glazed_terracotta-233",value:"green_glazed_terracotta"},
+{label:"红色带釉陶瓦-red_glazed_terracotta-234",value:"red_glazed_terracotta"},
+{label:"黑色带釉陶瓦-black_glazed_terracotta-235",value:"black_glazed_terracotta"},
+{label:"混凝土-concrete-236",value:"concrete"},
+{label:"混凝土粉末-concrete_powder-237",value:"concrete_powder"},
+{label:"化合物创建器-chemistry_table-238",value:"chemistry_table"},
+{label:"水下火把-underwater_torch-239",value:"underwater_torch"},
+{label:"紫颂植物-chorus_plant-240",value:"chorus_plant"},
+{label:"染色玻璃-stained_glass-241",value:"stained_glass"},
+{label:"灰化土-podzol-243",value:"podzol"},
+{label:"甜菜-beetroot-244",value:"beetroot"},
+{label:"切石机-stonecutter-245",value:"stonecutter"},
+{label:"发光的黑曜石-glowingobsidian-246",value:"glowingobsidian"},
+{label:"下界反应核-netherreactor-247",value:"netherreactor"},
+{label:"数据更新方块（update!）[note1]-info_update-248",value:"info_update"},
+{label:"数据更新方块（ate!upd）-info_update2-249",value:"info_update2"},
+{label:"被活塞推动的方块-movinglock-250",value:"movinglock"},
+{label:"侦测器-observer-251",value:"observer"},
+{label:"结构方块-structure_block-252",value:"structure_block"},
+{label:"强化玻璃-hard_glass-253",value:"hard_glass"},
+{label:"强化染色玻璃-hard_stained_glass-254",value:"hard_stained_glass"},
+{label:"reserved6-reserved6-255",value:"reserved6"},
+{label:"海晶石楼梯-prismarine_stairs-257",value:"prismarine_stairs"},
+{label:"暗海晶石楼梯-dark_prismarine_stairs-258",value:"dark_prismarine_stairs"},
+{label:"海晶石砖楼梯-prismarine_bricks_stairs-259",value:"prismarine_bricks_stairs"},
+{label:"去皮云杉原木-stripped_spruce_log-260",value:"stripped_spruce_log"},
+{label:"去皮白桦原木-stripped_birch_log-261",value:"stripped_birch_log"},
+{label:"去皮丛林原木-stripped_jungle_log-262",value:"stripped_jungle_log"},
+{label:"去皮金合欢原木-stripped_acacia_log-263",value:"stripped_acacia_log"},
+{label:"去皮深色橡木原木-stripped_dark_oak_log-264",value:"stripped_dark_oak_log"},
+{label:"去皮橡木原木-stripped_oak_log-265",value:"stripped_oak_log"},
+{label:"蓝冰-blue_ice-266",value:"blue_ice"},
+{label:"氢-element_1-267",value:"element_1"},
+{label:"氦-element_2-268",value:"element_2"},
+{label:"锂-element_3-269",value:"element_3"},
+{label:"铍-element_4-270",value:"element_4"},
+{label:"硼-element_5-271",value:"element_5"},
+{label:"碳-element_6-272",value:"element_6"},
+{label:"氮-element_7-273",value:"element_7"},
+{label:"氧-element_8-274",value:"element_8"},
+{label:"氟-element_9-275",value:"element_9"},
+{label:"氖-element_10-276",value:"element_10"},
+{label:"钠-element_11-277",value:"element_11"},
+{label:"镁-element_12-278",value:"element_12"},
+{label:"铝-element_13-279",value:"element_13"},
+{label:"硅-element_14-280",value:"element_14"},
+{label:"磷-element_15-281",value:"element_15"},
+{label:"硫-element_16-282",value:"element_16"},
+{label:"氯-element_17-283",value:"element_17"},
+{label:"氩-element_18-284",value:"element_18"},
+{label:"钾-element_19-285",value:"element_19"},
+{label:"钙-element_20-286",value:"element_20"},
+{label:"钪-element_21-287",value:"element_21"},
+{label:"钛-element_22-288",value:"element_22"},
+{label:"钒-element_23-289",value:"element_23"},
+{label:"铬-element_24-290",value:"element_24"},
+{label:"锰-element_25-291",value:"element_25"},
+{label:"铁-element_26-292",value:"element_26"},
+{label:"钴-element_27-293",value:"element_27"},
+{label:"镍-element_28-294",value:"element_28"},
+{label:"铜-element_29-295",value:"element_29"},
+{label:"锌-element_30-296",value:"element_30"},
+{label:"镓-element_31-297",value:"element_31"},
+{label:"锗-element_32-298",value:"element_32"},
+{label:"砷-element_33-299",value:"element_33"},
+{label:"硒-element_34-300",value:"element_34"},
+{label:"溴-element_35-301",value:"element_35"},
+{label:"氪-element_36-302",value:"element_36"},
+{label:"铷-element_37-303",value:"element_37"},
+{label:"锶-element_38-304",value:"element_38"},
+{label:"钇-element_39-305",value:"element_39"},
+{label:"锆-element_40-306",value:"element_40"},
+{label:"铌-element_41-307",value:"element_41"},
+{label:"钼-element_42-308",value:"element_42"},
+{label:"锝-element_43-309",value:"element_43"},
+{label:"钌-element_44-310",value:"element_44"},
+{label:"铑-element_45-311",value:"element_45"},
+{label:"钯-element_46-312",value:"element_46"},
+{label:"银-element_47-313",value:"element_47"},
+{label:"镉-element_48-314",value:"element_48"},
+{label:"铟-element_49-315",value:"element_49"},
+{label:"锡-element_50-316",value:"element_50"},
+{label:"锑-element_51-317",value:"element_51"},
+{label:"碲-element_52-318",value:"element_52"},
+{label:"碘-element_53-319",value:"element_53"},
+{label:"氙-element_54-320",value:"element_54"},
+{label:"铯-element_55-321",value:"element_55"},
+{label:"钡-element_56-322",value:"element_56"},
+{label:"镧-element_57-323",value:"element_57"},
+{label:"铈-element_58-324",value:"element_58"},
+{label:"镨-element_59-325",value:"element_59"},
+{label:"钕-element_60-326",value:"element_60"},
+{label:"钷-element_61-327",value:"element_61"},
+{label:"钐-element_62-328",value:"element_62"},
+{label:"铕-element_63-329",value:"element_63"},
+{label:"钆-element_64-330",value:"element_64"},
+{label:"铽-element_65-331",value:"element_65"},
+{label:"镝-element_66-332",value:"element_66"},
+{label:"钬-element_67-333",value:"element_67"},
+{label:"铒-element_68-334",value:"element_68"},
+{label:"铥-element_69-335",value:"element_69"},
+{label:"镱-element_70-336",value:"element_70"},
+{label:"镏-element_71-337",value:"element_71"},
+{label:"铪-element_72-338",value:"element_72"},
+{label:"钽-element_73-339",value:"element_73"},
+{label:"钨-element_74-340",value:"element_74"},
+{label:"铼-element_75-341",value:"element_75"},
+{label:"锇-element_76-342",value:"element_76"},
+{label:"铱-element_77-343",value:"element_77"},
+{label:"铂-element_78-344",value:"element_78"},
+{label:"金-element_79-345",value:"element_79"},
+{label:"汞-element_80-346",value:"element_80"},
+{label:"铊-element_81-347",value:"element_81"},
+{label:"铂-element_82-348",value:"element_82"},
+{label:"铋-element_83-349",value:"element_83"},
+{label:"钋-element_84-350",value:"element_84"},
+{label:"砹-element_85-351",value:"element_85"},
+{label:"氡-element_86-352",value:"element_86"},
+{label:"钫-element_87-353",value:"element_87"},
+{label:"镭-element_88-354",value:"element_88"},
+{label:"锕-element_89-355",value:"element_89"},
+{label:"钍-element_90-356",value:"element_90"},
+{label:"镤-element_91-357",value:"element_91"},
+{label:"铀-element_92-358",value:"element_92"},
+{label:"镎-element_93-359",value:"element_93"},
+{label:"钚-element_94-360",value:"element_94"},
+{label:"镅-element_95-361",value:"element_95"},
+{label:"锔-element_96-362",value:"element_96"},
+{label:"锫-element_97-363",value:"element_97"},
+{label:"锎-element_98-364",value:"element_98"},
+{label:"锿-element_99-365",value:"element_99"},
+{label:"镄-element_100-366",value:"element_100"},
+{label:"钔-element_101-367",value:"element_101"},
+{label:"锘-element_102-368",value:"element_102"},
+{label:"铹-element_103-369",value:"element_103"},
+{label:"𬬻-element_104-370",value:"element_104"},
+{label:"𬭊-element_105-371",value:"element_105"},
+{label:"𬭳-element_106-372",value:"element_106"},
+{label:"𬭛-element_107-373",value:"element_107"},
+{label:"𬭶-element_108-374",value:"element_108"},
+{label:"鿏-element_109-375",value:"element_109"},
+{label:"𫟼-element_110-376",value:"element_110"},
+{label:"𬬭-element_111-377",value:"element_111"},
+{label:"鿔-element_112-378",value:"element_112"},
+{label:"鉨-element_113-379",value:"element_113"},
+{label:"鈇-element_114-380",value:"element_114"},
+{label:"镆-element_115-381",value:"element_115"},
+{label:"𫟷-element_116-382",value:"element_116"},
+{label:"Tennessine-element_117-383",value:"element_117"},
+{label:"Oganesson-element_118-384",value:"element_118"},
+{label:"海草-seagrass-385",value:"seagrass"},
+{label:"珊瑚-coral-386",value:"coral"},
+{label:"珊瑚块-coral_block-387",value:"coral_block"},
+{label:"珊瑚扇-coral_fan-388",value:"coral_fan"},
+{label:"失活的珊瑚扇-coral_fan_dead-389",value:"coral_fan_dead"},
+{label:"墙上的珊瑚扇-coral_fan_hang-390",value:"coral_fan_hang"},
+{label:"墙上的珊瑚扇-coral_fan_hang2-391",value:"coral_fan_hang2"},
+{label:"墙上的珊瑚扇-coral_fan_hang3-392",value:"coral_fan_hang3"},
+{label:"海带-kelp-393",value:"kelp"},
+{label:"干海带块-dried_kelp_block-394",value:"dried_kelp_block"},
+{label:"金合欢木按钮-acacia_button-395",value:"acacia_button"},
+{label:"白桦木按钮-birch_button-396",value:"birch_button"},
+{label:"深色橡木按钮-dark_oak_button-397",value:"dark_oak_button"},
+{label:"丛林木按钮-jungle_button-398",value:"jungle_button"},
+{label:"云杉木按钮-spruce_button-399",value:"spruce_button"},
+{label:"金合欢木活板门-acacia_trapdoor-400",value:"acacia_trapdoor"},
+{label:"白桦木活板门-birch_trapdoor-401",value:"birch_trapdoor"},
+{label:"深色橡木活板门-dark_oak_trapdoor-402",value:"dark_oak_trapdoor"},
+{label:"丛林木活板门-jungle_trapdoor-403",value:"jungle_trapdoor"},
+{label:"云杉木活板门-spruce_trapdoor-404",value:"spruce_trapdoor"},
+{label:"金合欢木压力板-acacia_pressure_plate-405",value:"acacia_pressure_plate"},
+{label:"白桦木压力板-birch_pressure_plate-406",value:"birch_pressure_plate"},
+{label:"深色橡木压力板-dark_oak_pressure_plate-407",value:"dark_oak_pressure_plate"},
+{label:"丛林木压力板-jungle_pressure_plate-408",value:"jungle_pressure_plate"},
+{label:"云杉木压力板-spruce_pressure_plate-409",value:"spruce_pressure_plate"},
+{label:"雕刻过的南瓜-carved_pumpkin-410",value:"carved_pumpkin"},
+{label:"海泡菜-sea_pickle-411",value:"sea_pickle"},
+{label:"潮涌核心-conduit-412",value:"conduit"},
+{label:"海龟蛋-turtle_egg-414",value:"turtle_egg"},
+{label:"气泡柱-bubble_column-415",value:"bubble_column"},
+{label:"屏障-barrier-416",value:"barrier"},
+{label:"末地石砖台阶-stone_slab3-417",value:"stone_slab3"},
+{label:"竹子-bamboo-418",value:"bamboo"},
+{label:"竹笋-bamboo_sapling-419",value:"bamboo_sapling"},
+{label:"脚手架-scaffolding-420",value:"scaffolding"},
+{label:"苔石砖台阶-stone_slab4-421",value:"stone_slab4"},
+{label:"双层末地石砖台阶-double_stone_slab3-422",value:"double_stone_slab3"},
+{label:"双层苔石砖台阶-double_stone_slab4-423",value:"double_stone_slab4"},
+{label:"花岗岩楼梯-granite_stairs-424",value:"granite_stairs"},
+{label:"闪长岩楼梯-diorite_stairs-425",value:"diorite_stairs"},
+{label:"安山岩楼梯-andesite_stairs-426",value:"andesite_stairs"},
+{label:"磨制花岗岩楼梯-polished_granite_stairs-427",value:"polished_granite_stairs"},
+{label:"磨制闪长岩楼梯-polished_diorite_stairs-428",value:"polished_diorite_stairs"},
+{label:"磨制安山岩楼梯-polished_andesite_stairs-429",value:"polished_andesite_stairs"},
+{label:"苔石砖楼梯-mossy_stone_brick_stairs-430",value:"mossy_stone_brick_stairs"},
+{label:"平滑红砂岩楼梯-smooth_red_sandstone_stairs-431",value:"smooth_red_sandstone_stairs"},
+{label:"平滑砂岩楼梯-smooth_sandstone_stairs-432",value:"smooth_sandstone_stairs"},
+{label:"末地石砖楼梯-end_brick_stairs-433",value:"end_brick_stairs"},
+{label:"苔石楼梯-mossy_cobblestone_stairs-434",value:"mossy_cobblestone_stairs"},
+{label:"石楼梯-normal_stone_stairs-435",value:"normal_stone_stairs"},
+{label:"云杉木告示牌-spruce_standing_sign-436",value:"spruce_standing_sign"},
+{label:"墙上的云杉木告示牌-spruce_wall_sign-437",value:"spruce_wall_sign"},
+{label:"平滑石头-smooth_stone-438",value:"smooth_stone"},
+{label:"红色地狱砖楼梯-red_nether_brick_stairs-439",value:"red_nether_brick_stairs"},
+{label:"石英楼梯-smooth_quartz_stairs-440",value:"smooth_quartz_stairs"},
+{label:"白桦木告示牌-birch_standing_sign-441",value:"birch_standing_sign"},
+{label:"墙上的白桦木告示牌-birch_wall_sign-442",value:"birch_wall_sign"},
+{label:"丛林木告示牌-jungle_standing_sign-443",value:"jungle_standing_sign"},
+{label:"墙上的丛林木告示牌-jungle_wall_sign-444",value:"jungle_wall_sign"},
+{label:"金合欢木告示牌-acacia_standing_sign-445",value:"acacia_standing_sign"},
+{label:"墙上的金合欢木告示牌-acacia_wall_sign-446",value:"acacia_wall_sign"},
+{label:"深色橡木告示牌-darkoak_standing_sign-447",value:"darkoak_standing_sign"},
+{label:"墙上的深色橡木告示牌-darkoak_wall_sign-448",value:"darkoak_wall_sign"},
+{label:"讲台-lectern-449",value:"lectern"},
+{label:"砂轮-grindstone-450",value:"grindstone"},
+{label:"高炉-blast_furnace-451",value:"blast_furnace"},
+{label:"切石机-stonecutter_block-452",value:"stonecutter_block"},
+{label:"烟熏炉-smoker-453",value:"smoker"},
+{label:"燃烧的烟熏炉-lit_smoker-454",value:"lit_smoker"},
+{label:"制图台-cartography_table-455",value:"cartography_table"},
+{label:"制箭台-fletching_table-456",value:"fletching_table"},
+{label:"锻造台-smithing_table-457",value:"smithing_table"},
+{label:"木桶-barrel-458",value:"barrel"},
+{label:"织布机-loom-459",value:"loom"},
+{label:"钟-bell-461",value:"bell"},
+{label:"甜浆果丛-sweet_berry_bush-462",value:"sweet_berry_bush"},
+{label:"灯笼-lantern-463",value:"lantern"},
+{label:"营火-campfire-464",value:"campfire"},
+{label:"装有熔岩的炼药锅-lava_cauldron-465",value:"lava_cauldron"},
+{label:"拼图方块-jigsaw-466",value:"jigsaw"},
+{label:"木头-wood-467",value:"wood"},
+{label:"堆肥桶-composter-468",value:"composter"},
+{label:"燃烧的高炉-lit_blast_furnace-469",value:"lit_blast_furnace"},
+{label:"光源方块-light_block-470",value:"light_block"},
+{label:"凋零玫瑰-wither_rose-471",value:"wither_rose"},
+{label:"粘性活塞臂-stickypistonarmcollision-472",value:"stickypistonarmcollision"},
+{label:"蜂巢-bee_nest-473",value:"bee_nest"},
+{label:"蜂箱-beehive-474",value:"beehive"},
+{label:"蜂蜜块-honey_block-475",value:"honey_block"},
+{label:"蜜脾块-honeycomb_block-476",value:"honeycomb_block"},
+{label:"允许方块-allow-210",value:"allow"},
+{label:"拒绝方块-deny-211",value:"deny"},
+{label:"边界方块-border_block-212",value:"border_block"},
+{label:"黑板-chalkboard-230",value:"chalkboard"},
+{label:"相机-camera-242",value:"camera"}
+],
+                        minLength:-1,
+                        position:{my:'left bottom',at:'left top'}
+                    });
+                    if (/[^a-z0-9_:\-]|^\d+/g.test(val)) {
+                        let et = val.match(/[^a-z0-9_:\-]|^\d+/g);
+                        $('input:hover+div').html(`<i class='fad fa-times-square fa-fw'></i>错误:错误的${et}`).css('border','#ff6b81 1vw solid').css('color','#ff4757');
+                    }else{
+                        $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border','').css('color','');
+                    }
+                });
+                $('select.mod').change(function(){
+                    let num = this.selectedIndex;
+                    if (num === 0) {//destroy
+                        $('select.mod+label').html('用指定方块替换填充区域内所有方块（包括空气），原有方块视为被无附魔的钻石锹或镐采掘而掉落对应的实体形式');
+                        $('select.mod~code').html('/fill <填充范围> <方块id> [特殊值] destroy');
+                    }
+                    if (num === 1) {//hollow
+                        $('select.mod+label').html('仅用指定方块替换填充区域外层的方块。内部方块被替换为空气');
+                        $('select.mod~code').html('/fill <填充范围> <方块id> [特殊值] hollow');
+                    }
+                    if (num === 2) {//keep
+                        $('select.mod+label').html('仅用指定方块替换填充区域内的空气方块');
+                        $('select.mod~code').html('/fill <填充范围> <方块id> [特殊值] keep');
+                    }
+                    if (num === 3) {//outline
+                        $('select.mod+label').html('仅用指定方块替换填充区域外层的方块');
+                        $('select.mod~code').html('/fill <填充范围> <方块id> [特殊值] outline');
+                    }
+                    if (num === 4) {//replace
+                        $('select.mod+label').html('用指定方块替换填充区域内所有方块（包括空气），而不以实体形式掉落被替换的方块和方块内容物。可选地，不指定替换后方块的数据标签，而是指定方块ID和数据值，用于限制被替换的方块类型');
+                        $('select.mod~code').html('/fill <填充范围> <方块id> [特殊值] replace [替换方块名：方块] [替换方块数据：整数]');
+                        $('label.mod,label.mod~*').css('display','');
+                    }else $('label.mod,label.mod~*').css('display','none');
+                });
+                $('.test').keyup(function(){
+                    this.value = this.value.replace(/^\s|\s{2}$|[^/0-9a-z\d~\-\.\s^]/,'');
+                    let val = this.value;
+                    let cmd = val.split(' ');
+                    cmd[0]='/fill';
+                    $(this).autocomplete({
+                        delay:0,
+                        source: cmd,
+                        minLength:-1,
+                        position:{my:'left bottom',at:'left top'}
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <header>
+            <div>
+                <pre>/fill</pre>
+            </div>
+            <div>
+                <div>生成器</div>
+                <h1>/fill生成器</h1>
+                <p>一个用于生成/fill命令和辅助学习/fill命令的一个工具</p>
+            </div>
+        </header>
+        <main>
+            <div class='block'>
+                <h1><i class='fad fa-info-circle fa-fw' style='color:lightgreen'></i>简介和语法</h1>
+                <label>/fill是用于使用特定方块填充一个区域的全部或部分</label>
+                <label>语法：</label>
+                <code>/fill <自:x y z> <至:x y z> <方块:方块> [数据:整数] [destroy|hollow|keep|outline|replace] [替换方块名：方块] [替换方块数据：整数]</code>
+            </div>
+            <div class='block'>
+                <h1><i class='fad fa-expand-alt fa-fw' style='color:lightgreen'></i>范围</h1>
+                <label>/fill的范围用两个<code>[x y z]</code>的点来表示,也可以用<code>~</code>或<code>^</code>来表示</label>
+                <label>语法：</label>
+                <code>/fill <点一：x y z> <点二：x y z></code>
+                <label>你可以在下面填入坐标</label>
+                <br/>
+                <label><i class='fad fa-external-link-square fa-fw fa-rotate-270' style='color:lightgreen'></i>点一</label>
+                <input class='point a' type='text'/>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+                <label><i class='fad fa-external-link-square fa-fw fa-rotate-90' style='color:lightgreen'></i>点二</label>
+                <input class='point b' type='text'/>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+            </div>
+            <div class='block'>
+                <h1><i class='fad fa-square fa-fw' style='color:lightgreen'></i>方块</h1>
+                <label>方块id用一串英文单词表示来表示,例<code>command_block</code>,也可以用数字id来表示来表示,例<code>137</code></label>
+                <label>语法：</label>
+                <code>/fill <填充范围> <方块id> [特殊值]</code>
+                <label>你可以在下面填入方块id和特殊值</label>
+                <br/>
+                <label><i class='fad fa-square fa-fw' style='color:lightgreen'></i>方块id</label>
+                <input class='blocks a' type='text'/>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+                <label><i class='fad fa-database fa-fw' style='color:lightgreen'></i>特殊值</label>
+                <input class='data a' type='text' onkeyup='this.value=this.value.replace(/[^0-9]|\d{3,}/,"")'>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+            </div>
+            <div class='block'>
+                <h1><i class='fad fa-cubes fa-fw' style='color:lightgreen'></i>填充模式</h1>
+                <label>/fill的填充模式用<code>destroy|hollow|<br/>keep|outline|replace</code>之中一个来表示,用于更改fill的填充方法</label>
+                <label>可以在这选择模式</label>
+                <select class='mod'>
+                    <option>destroy</option>
+                    <option>hollow</option>
+                    <option>keep</option>
+                    <option>outline</option>
+                    <option selected>replace</option>
+                </select>
+                <label>用指定方块替换填充区域内所有方块（包括空气），而不以实体形式掉落被替换的方块和方块内容物。可选地，不指定替换后方块的数据标签，而是指定方块ID和数据值，用于限制被替换的方块类型</label>
+                <label>语法：</label>
+                <code>/fill <填充范围> <方块id> [特殊值]</code>
+                <label class='mod'>你可以在下面填入被替换方块id和特殊值</label>
+                <br/>
+                <label><i class='far fa-square fa-fw' style='color:lightgreen'></i>被替换方块id</label>
+                <input class='blocks b' type='text'/>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+                <label><i class='fad fa-database fa-fw' style='color:lightgreen'></i>特殊值</label>
+                <input class='data b' type='text' onkeyup='this.value=this.value.replace(/[^0-9]|\d{3,}/,"")'>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+            </div>
+            <div class='block'>
+                <h1><i class='fad fa-debug fa-fw' style='color:lightgreen'></i>测试</h1>
+                <label><i class='fad fa-edit fa-fw' style='color:lightgreen'></i>命令</label>
+                <input class='test' type='text'/>
+                <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+            </div>
+            <div class='block'>
+                <h1><i class='fad fa-sign-out fa-fw' style='color:lightgreen'></i>生成</h1>
+                <button>生成命令</button>
+            </div>
+        </main>
+    </body>
+</html>
