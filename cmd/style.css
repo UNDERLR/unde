@@ -1,0 +1,208 @@
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Console", Monaco, monospace, Arial, Helvetica, sans-serif;
+    user-select: none;
+    font-size: 1.1em;
+}
+
+header>div:first-child {
+    background: #444;
+    width: 100vw;
+    height: 40vw;
+    position: relative;
+    overflow: hidden;
+}
+
+header>div:first-child>pre {
+    color: rgba(255, 255, 255, .5);
+    font-size: 4.8em;
+    font-weight: bolder;
+    position: absolute;
+    bottom: 0;
+    left: -.3em;
+}
+
+header>div:last-child {
+    box-sizing: border-box;
+    padding: 1em;
+    width: 100vw;
+    position: relative;
+    text-align: center;
+}
+
+header>div:last-child>div {
+    background: #111;
+    width: 20vw;
+    height: 10vw;
+    color: #eeeeee;
+    font-size: .8em;
+    font-weight: bolder;
+    position: absolute;
+    top: -8vw;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header>div:last-child>h1 {
+    font-size: 1.5em;
+}
+
+header>div:last-child>p {
+    font-size: .8em;
+}
+
+main {
+    padding: 1em;
+}
+
+.block {
+    border-top: lightgreen 1vw solid;
+    padding: 5vw 2vw;
+    margin: 10vw 0;
+    position: relative;
+}
+
+.block>h1 {
+    position: absolute;
+    top: -1.5em;
+    color: #222;
+}
+
+.block>label {
+    font-size: .8em;
+    display: inline-block;
+}
+
+.block>code {
+    background: #222;
+    color: #eee;
+    overflow-x: auto;
+    display: flex;
+    align-items: center;
+    font-size: .8em;
+    height: 10vw;
+    width: 80vw;
+    margin: auto;
+    white-space: nowrap;
+}
+
+label code {
+    display: inline;
+    background: #efe;
+    color: lightgreen;
+    border-radius: 1vw;
+}
+
+input {
+    font-size: .9em;
+    outline-color: lightgreen;
+    width: 80vw;
+}
+
+input[type="text"]+div {
+    position: absolute;
+    font-size: .8em;
+    background: #eee;
+    width: 80vw;
+    border: 1px solid lightgreen;
+    transform: translateY(-100%);
+    opacity: 0;
+    z-index: -1;
+    transition: .5s;
+}
+
+input[type="text"]:hover+div {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 1;
+}
+
+.ui-autocomplete {
+    font-size: .8em;
+    max-height: 50vw;
+    width: 50vw;
+    overflow-y: scroll;
+}
+
+select {
+    font-size: .8em;
+    outline-color: lightgreen;
+    background: #fff;
+}
+
+button {
+    font-size: .8em;
+    margin: auto;
+    display: block;
+    background: #fff;
+    border-width: 2px;
+    outline-color: lightgreen;
+    padding: 0.3em .5em;
+}
+
+.output {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+}
+
+.output>.ht {
+    overflow-y: scroll;
+    background: rgba(17, 17, 17, 0.685);
+    height: 120vw;
+    width: 100vw;
+}
+
+.output>.copy {
+    position: relative;
+    background: #fff;
+    height: 35vw;
+    width: 100vw;
+    text-align: center;
+}
+
+div.copy>input {
+    position: absolute;
+    width: 70vw;
+    height: 1em;
+    top: 5vw;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+div.copy>h1 {
+    background: #111;
+    width: 20vw;
+    height: 10vw;
+    color: #eeeeee;
+    font-size: .8em;
+    font-weight: bolder;
+    position: absolute;
+    top: -8vw;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.copy>button {
+    position: absolute;
+    bottom: 5vw;
+}
+
+div.copy>.copy {
+    right: 20vw;
+}
+
+div.copy>.close {
+    left: 20vw;
+}
+.show{display: none;}
+    
