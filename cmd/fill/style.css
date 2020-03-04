@@ -146,34 +146,25 @@ button {
 }
 
 .output {
+    box-shadow:0 0 1vw rgba(0, 0, 0, .5);
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 100%;
+    display: none;
+    z-index: 5;
 }
 
-.output>.ht {
-    overflow-y: scroll;
-    background: rgba(17, 17, 17, 0.685);
-    height: calc(100vh-35vw);
-    width: 100vw;
-}
-
-.output>.copy {
+div.copy {
     position: relative;
     background: #fff;
+    top: 0;
     height: 35vw;
     width: 100vw;
-    text-align: center;
+    text-align:center;
 }
 
-div.copy>input {
-    position: absolute;
-    width: 70vw;
-    height: 1em;
-    top: 5vw;
-    left: 50%;
-    transform: translateX(-50%);
+#output {
+    margin-top:5vw;
 }
 
 div.copy>h1 {
@@ -194,7 +185,7 @@ div.copy>h1 {
 
 div.copy>button {
     position: absolute;
-    bottom: 5vw;
+    bottom: 3vw;
 }
 
 div.copy>.copy {
@@ -204,5 +195,5 @@ div.copy>.copy {
 div.copy>.close {
     left: 20vw;
 }
-.show{display: none;}
+.show{display: block;}
     
