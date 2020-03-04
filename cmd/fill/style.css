@@ -155,7 +155,7 @@ button {
 .output>.ht {
     overflow-y: scroll;
     background: rgba(17, 17, 17, 0.685);
-    height: 120vw;
+    height: calc(100vh-35vw);
     width: 100vw;
 }
 
