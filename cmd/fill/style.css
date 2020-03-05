@@ -41,18 +41,16 @@ body {
     position: fixed;
     left: 0;
     top: 10vw;
-    min-height: 0;
     height:0;
     width: 100vw;
     background: #f1f2ff;
     z-index: 10;
-    overflow: hidden;
+    overflow: scroll;
     transition:.5s;
 }
 
 #menu:checked+div {
-    min-height:50vw;
-    height:;
+    height:100vw;
 }
 
 #menu+div>label {
@@ -69,12 +67,17 @@ body {
 #menu+div>label>div {
     width:40vw;
     height:30vw;
+    padding-top:10vw;
     text-align:center;
     opacity:0;
     transition:.1s;
 }
+
+#menu+div>label>input {display:none;}
+
 #menu+div>label>input:checked+div {
     opacity:1;
+    background:#00000020;
 }
 
 #menu+div>label>pre {
@@ -85,6 +88,46 @@ body {
     font-size:.8em;
     text-align:center;
     color:#ddd;
+}
+
+.setting {
+    position:fixed;
+    top:110vw;
+    display:flex;
+    height:15vw;
+    width:100vw;
+    background:#f1f2ff;
+    opacity:0;
+}
+
+#menu:checked+div>.setting {
+    opacity:1;
+}
+
+.setting>div {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:.8em;
+    width:50vw;
+    border:1px #333 solid;
+}
+
+.set {
+    font-size:.9em;
+    width:90vw;
+    margin:5vw;
+}
+
+.set>label {
+    font-size:.9em;
+    display:block;
+    margin-left:5vw;
+}
+
+.set>input {
+    width:50vw;
+    margin-left:10vw;
 }
 
 header>div:first-child {
