@@ -30,6 +30,30 @@
         <div>
             <pre>/fill</pre>
         </div>
+        <div class='header'>
+            <div>
+                <i class='far fa-chevron-left fa-fw'></i>
+                <h1>/fill指令生成器</h1>
+                <div><label for='menu'><i class='fad fa-list fa-fw'></i></label></div>
+            </div>
+        </div>
+        <input type='checkbox' id='menu' style='display:none'/>
+        <div>
+            <label onclick='color("lightgreen","#efe")' style='background:lightgreen'>
+                <input type='radio' name='color' style='opacity:0' checked/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>淡绿</pre>
+            </label>
+            <label onclick='color("skyblue","#eef")' style='background:skyblue'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>天蓝</pre>
+            </label>
+        </div>
         <div>
             <div>生成器</div>
             <h1>/fill生成器</h1>
@@ -38,41 +62,41 @@
     </header>
     <main>
         <div class='block'>
-            <h1><i class='fad fa-info-circle fa-fw' style='color:lightgreen'></i>简介和语法</h1>
+            <h1><i class='fad fa-info-circle fa-fw c' ></i>简介和语法</h1>
             <label>/fill是用于使用特定方块填充一个区域的全部或部分</label>
             <label>语法：</label>
             <code>/fill <自:x y z> <至:x y z> <方块:方块> [数据:整数] [destroy|hollow|keep|outline|replace] [替换方块名：方块] [替换方块数据：整数]</code>
         </div>
         <div class='block'>
-            <h1><i class='fad fa-expand-alt fa-fw' style='color:lightgreen'></i>范围</h1>
+            <h1><i class='fad fa-expand-alt fa-fw c' ></i>范围</h1>
             <label>/fill的范围用两个<code>[x y z]</code>的点来表示,也可以用<code>~</code>或<code>^</code>来表示</label>
             <label>语法：</label>
             <code>/fill <点一：x y z> <点二：x y z></code>
             <label>你可以在下面填入坐标</label>
             <br />
-            <label><i class='fad fa-external-link-square fa-fw fa-rotate-270' style='color:lightgreen'></i>点一</label>
+            <label><i class='fad fa-external-link-square fa-fw fa-rotate-270 c' ></i>点一</label>
             <input class='point a' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
-            <label><i class='fad fa-external-link-square fa-fw fa-rotate-90' style='color:lightgreen'></i>点二</label>
+            <label><i class='fad fa-external-link-square fa-fw fa-rotate-90 c' ></i>点二</label>
             <input class='point b' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
-            <h1><i class='fad fa-square fa-fw' style='color:lightgreen'></i>方块</h1>
+            <h1><i class='fad fa-square fa-fw c' ></i>方块</h1>
             <label>方块id用一串英文单词表示来表示,例<code>command_block</code>,也可以用数字id来表示来表示,例<code>137</code></label>
             <label>语法：</label>
             <code>/fill <填充范围> <方块id> [特殊值]</code>
             <label>你可以在下面填入方块id和特殊值</label>
             <br />
-            <label><i class='fad fa-square fa-fw' style='color:lightgreen'></i>方块id</label>
+            <label><i class='fad fa-square fa-fw c' ></i>方块id</label>
             <input class='blocks a' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
-            <label><i class='fad fa-database fa-fw' style='color:lightgreen'></i>特殊值</label>
+            <label><i class='fad fa-database fa-fw c' ></i>特殊值</label>
             <input class='data a' type='text' onkeyup='this.value=this.value.replace(/[^0-9]|\d{3,}/,"")'>
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
-            <h1><i class='fad fa-cubes fa-fw' style='color:lightgreen'></i>填充模式</h1>
+            <h1><i class='fad fa-cubes fa-fw c' ></i>填充模式</h1>
             <label>/fill的填充模式用<code>destroy|hollow|<br/>keep|outline|replace</code>之中一个来表示,用于更改fill的填充方法</label>
             <label>可以在这选择模式</label>
             <select class='mod' id='mod'>
@@ -87,21 +111,21 @@
             <code>/fill <填充范围> <方块id> [特殊值]</code>
             <label class='mod'>你可以在下面填入被替换方块id和特殊值</label>
             <br />
-            <label><i class='far fa-square fa-fw' style='color:lightgreen'></i>被替换方块id</label>
+            <label><i class='far fa-square fa-fw c' ></i>被替换方块id</label>
             <input class='blocks b' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
-            <label><i class='fad fa-database fa-fw' style='color:lightgreen'></i>特殊值</label>
+            <label><i class='fad fa-database fa-fw c' ></i>特殊值</label>
             <input class='data b' type='text' onkeyup='this.value=this.value.replace(/[^0-9]|\d{3,}/,"")'>
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
-            <h1><i class='fad fa-debug fa-fw' style='color:lightgreen'></i>测试</h1>
-            <label><i class='fad fa-edit fa-fw' style='color:lightgreen'></i>命令</label>
+            <h1><i class='fad fa-debug fa-fw c' ></i>测试</h1>
+            <label><i class='fad fa-edit fa-fw c' ></i>命令</label>
             <input class='test' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
-            <h1><i class='fad fa-sign-out fa-fw' style='color:lightgreen'></i>生成</h1>
+            <h1><i class='fad fa-sign-out fa-fw c' ></i>生成</h1>
             <button class="open">生成命令</button>
         </div>
         <div class="output">
