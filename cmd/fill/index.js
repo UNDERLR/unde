@@ -1,4 +1,11 @@
-
+function color(c,b) {
+    $('.c').css('color',c);
+    $('.block').css('border-top-color',c);
+    $('input,select').css('outline-color',c);
+    $('input[type="text"]+div').css('border-color',c);
+    $('label code').css('color',c);
+    $('label code').css('background',b);
+}
 $(function () {
     $(document).autocomplete();
     $('.point').keyup(function () {
