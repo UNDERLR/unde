@@ -39,20 +39,53 @@
         </div>
         <input type='checkbox' id='menu' style='display:none'/>
         <div>
-            <label onclick='color("lightgreen","#efe")' style='background:lightgreen'>
+            <label onclick='color("lightgreen","#efe",0)' style='background:lightgreen'>
                 <input type='radio' name='color' style='opacity:0' checked/>
                 <div>
                     <i class='far fa-check fa-fw' style='color:#eee'></i>
                 </div>
                 <pre>淡绿</pre>
             </label>
-            <label onclick='color("skyblue","#eef")' style='background:skyblue'>
+            <label onclick='color("skyblue","#eef",1)' style='background:skyblue'>
                 <input type='radio' name='color' style='opacity:0'/>
                 <div>
                     <i class='far fa-check fa-fw' style='color:#eee'></i>
                 </div>
                 <pre>天蓝</pre>
             </label>
+            <label onclick='color("LightCoral","#fee",2)' style='background:LightCoral'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>淡红</pre>
+            </label>
+            <label onclick='color("darkgray","#00000020",3)' style='background:darkgray'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>暗灰</pre>
+            </label>
+            <div class='set'>
+                <p>字体</p>
+                <label>大小(慎用)</label>
+                <input type='number' onkeyup='setting("fs",this.value+"em");this.value=this.value.replace(/[^\d\.]/,"");' value='1'/>em
+                <label>颜色</label>
+                <input type='color' onchange='setting("c",this.value)'/>
+                <p>主题色</p>
+                <label>前景色</label>
+                <input type='color' onchange='setting("tc",this.value)'/>
+                <label>背景色</label>
+                <input type='color' onchange='setting("tb",this.value)'/>
+                <p>背景</p>
+                <label>颜色</label>
+                <input type='color' onchange='setting("bb",this.value)'/>
+            </div>
+            <div class='setting'>
+                <div>资助作者</div>
+                <div>反馈问题</div>
+            </div>
         </div>
         <div>
             <div>生成器</div>
