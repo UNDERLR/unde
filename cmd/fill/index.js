@@ -1,10 +1,27 @@
-function color(c,b) {
+function color(c,b,id) {
+    let d = new Date();
+    let t = d.setTime(d.getTime()+(7*24*60*60*1000));
+    document.cookie = 'color='+id+';expires='+t.toUTCString()+';path=/';
     $('.c').css('color',c);
     $('.block').css('border-top-color',c);
     $('input,select').css('outline-color',c);
     $('input[type="text"]+div').css('border-color',c);
     $('label code').css('color',c);
     $('label code').css('background',b);
+    $('label,h1,p').css('color','#000');
+    $('body').css('background','#fff');
+}
+alert(document.cookie);
+function setting(key,val) {
+    if(key==='fs')$('*').css('font-size',val);
+    if(key==='c')$('label,h1,p').css('color',val);
+    if(key==='tc'){
+        $('label code,.c').css('color',val);
+        $('input,select,button').css('outline',val);
+        $('.block').css('border-top-color',val);
+    }
+    if(key==='tb')$('label code').css('background',val);
+    if(key==='bb')$('body').css('background',val);
 }
 $(function () {
     $(document).autocomplete();
@@ -12,7 +29,7 @@ $(function () {
         this.value = this.value.replace(/^\s|\s{2}$|[^0-9~\-\.\s^]/g, '');
         let val = this.value;
         let points = val.split(' ');
-        if (!points[0]) points[0] = '~';
+        if (!points[0]) points[0] = '~';pqapaap
         if (!points[1]) points[1] = '~';
         if (!points[2]) points[2] = '~';
         $(this).autocomplete({
