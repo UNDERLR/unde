@@ -1,7 +1,4 @@
-function color(c,b,id) {
-    let d = new Date();
-    let t = d.setTime(d.getTime()+(7*24*60*60*1000));
-    document.cookie = 'color='+id+';expires='+t.toUTCString()+';path=/';
+function color(c,b) {
     $('.c').css('color',c);
     $('.block').css('border-top-color',c);
     $('input,select').css('outline-color',c);
@@ -11,7 +8,6 @@ function color(c,b,id) {
     $('label,h1,p').css('color','#000');
     $('body').css('background','#fff');
 }
-alert(document.cookie);
 function setting(key,val) {
     if(key==='fs')$('*').css('font-size',val);
     if(key==='c')$('label,h1,p').css('color',val);
