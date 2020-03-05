@@ -7,6 +7,86 @@
     font-size: 1.1em;
 }
 
+body {
+    margin-top: 10vw;
+}
+
+.c {color: lightgreen;}
+
+.header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 10vw;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    background: #e1e2ef;
+}
+
+.header>div {
+    display: flex;
+    align-items: center;
+    width: 98vw;
+}
+
+.header h1 {
+    font-size: .7em;
+    margin: auto;
+}
+
+#menu+div {
+    position: fixed;
+    left: 0;
+    top: 10vw;
+    min-height: 0;
+    height:0;
+    width: 100vw;
+    background: #f1f2ff;
+    z-index: 10;
+    overflow: hidden;
+    transition:.5s;
+}
+
+#menu:checked+div {
+    min-height:50vw;
+    height:;
+}
+
+#menu+div>label {
+    position:relative;
+    display:block;
+    width:40vw;
+    height:30vw;
+    border-radius:1vw;
+    overflow:hidden;
+    display:inline-block;
+    margin:calc(11vw/3);
+}
+
+#menu+div>label>div {
+    width:40vw;
+    height:30vw;
+    text-align:center;
+    opacity:0;
+    transition:.1s;
+}
+#menu+div>label>input:checked+div {
+    opacity:1;
+}
+
+#menu+div>label>pre {
+    position:absolute;
+    bottom:0;
+    width:40vw;
+    background:#00000050;
+    font-size:.8em;
+    text-align:center;
+    color:#ddd;
+}
+
 header>div:first-child {
     background: #444;
     width: 100vw;
