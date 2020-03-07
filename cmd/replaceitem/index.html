@@ -1,1 +1,147 @@
-hello world
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, max=imum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+    <title>/fill指令生成器</title>
+    <!-- link -->
+    <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js'></script>
+    <script src='https://p9f09f.coding-pages.com/fad/duotone.min.js'></script>
+    <link rel='stylesheet' href='https://p9f09f.coding-pages.com/fad/duotone.min.css'>
+    <script src='https://p9f09f.coding-pages.com/far/regular.min.js'></script>
+    <link rel='stylesheet' href='https://p9f09f.coding-pages.com/far/regular.min.css'>
+    <link rel='stylesheet' href='https://p9f09f.coding-pages.com/fa/fontawesome.min.css'>
+    <script src='https://p9f09f.coding-pages.com/fa/fontawesome.min.js'></script>
+    <script src='https://3x7ljc.coding-pages.com/list/id-list-min.js'></script>
+    <link rel='stylesheet' href='style.css'>
+    <script src='index.js'></script>
+    <link rel="stylesheet" href='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css'>
+    <script src='https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js'></script>
+
+    <style></style>
+    <script></script>
+</head>
+
+<body>
+    <header>
+        <div>
+            <pre>/replaceitem</pre>
+        </div>
+        <div class='header'>
+            <div>
+                <i class='far fa-chevron-left fa-fw'></i>
+                <h1>/replaceitem</h1>
+                <div><label for='menu'><i class='far fa-list fa-fw'></i></label></div>
+            </div>
+        </div>
+        <input type='checkbox' id='menu' style='display:none'/>
+        <div>
+            <label onclick='color("lightgreen","#efe")' style='background:lightgreen'>
+                <input type='radio' name='color' style='opacity:0' checked/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>淡绿</pre>
+            </label>
+            <label onclick='color("skyblue","#eef")' style='background:skyblue'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>天蓝</pre>
+            </label>
+            <label onclick='color("LightCoral","#fee")' style='background:LightCoral'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>淡红</pre>
+            </label>
+            <label onclick='color("darkgray","#00000020")' style='background:darkgray'>
+                <input type='radio' name='color' style='opacity:0'/>
+                <div>
+                    <i class='far fa-check fa-fw' style='color:#eee'></i>
+                </div>
+                <pre>暗灰</pre>
+            </label>
+            <div class='set'>
+                <p>字体</p>
+                <label>大小(慎用)</label>
+                <input type='number' onkeyup='setting("fs",this.value+"em");this.value=this.value.replace(/[^\d\.]/,"");' value='1'/>em
+                <label>颜色</label>
+                <input type='color' onchange='setting("c",this.value)'/>
+                <p>主题色</p>
+                <label>前景色</label>
+                <input type='color' onchange='setting("tc",this.value)'/>
+                <label>背景色</label>
+                <input type='color' onchange='setting("tb",this.value)'/>
+                <p>背景</p>
+                <label>颜色</label>
+                <input type='color' onchange='setting("bb",this.value)'/>
+            </div>
+            <div class='setting'>
+                <a href="https://3x7ljc.coding-pages.com/IMG_20200305_222611.jpg">资助作者</a>
+                <a href="mailto:2180945240@qq.com?subject=反馈问题&body=问题:" rel="nofollow">反馈问题</a>
+            </div>
+        </div>
+        <div>
+            <div>生成器</div>
+            <h1>/replaceitem</h1>
+            <p>这个指令非常好玩，可以替换实体或方块的物品</p>
+        </div>
+    </header>
+    <main>
+        <div class='block'>
+            <h1><i class='fad fa-info-circle fa-fw c' ></i>简介和语法</h1>
+            <label>/replaceitem用于替换方块（箱子，熔炉等）或实体（玩家或生物）物品栏内的物品。</label>
+            <label>语法：</label>
+            <br/>
+            <label>替换方块</label>
+            <code>replaceitem block <位置：x y z> <栏位类型：字符串> <栏位ID：整数> <物品名：字符串> [数量：整数] [数据值：整数]</code>
+            <label>替换实体</label>
+            <code>replaceitem entity <目标：目标> <栏位类型：字符串> <栏位ID：整数> <物品：字符串> [数量：整数] [数据值：整数]</code>
+        </div>
+        <div class='block'>
+            <h1><i class='fad fa-database fa-fw c' ></i>模式</h1>
+            <label>/replaceitem有两种模式，<code>entity</code>和<code>block</code>，用来表示目标是实体还是方块</label>
+            <select onchange='mod(this.options[this.selectedIndex].text)'>
+                <option>entity</option>
+                <option>block</option>
+            </select>
+        </div>
+        <div class='block m'>
+            <h1><i class='fad fa-meh-blank fa-fw c' ></i>目标</h1>
+            <label>/replaceitem的目标用选择器来表示,例<code>@a</code>,也可以用玩家名来表示来表示,例<code>UNDERLR</code></label>
+            <label>语法：</label>
+            <code>/replaceitem entity <目标></code>
+            <label>你可以在下面填入选择器或玩家名</label>
+            <br />
+            <label><i class='fad fa-meh-blank fa-fw c' ></i>目标</label>
+            <input class='tar a' type='text' />
+            <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+        </div>
+        <div class='block'>
+            <h1><i class='fad fa-debug fa-fw c' ></i>测试</h1>
+            <label><i class='fad fa-edit fa-fw c' ></i>命令</label>
+            <input class='test' type='text' />
+            <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+        </div>
+        <div class='block'>
+            <h1><i class='fad fa-sign-out fa-fw c' ></i>生成</h1>
+            <button class="open">生成命令</button>
+        </div>
+        <div class="output">
+            <div class="copy">
+                <h1>输出栏</h1>
+                <input id='output'/>
+                <button class="close">关闭</button>
+                <button class="copy">复制</button>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
