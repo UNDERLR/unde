@@ -25,7 +25,7 @@ $(function () {
         this.value = this.value.replace(/^\s|\s{2}$|[^0-9~\-\.\s^]/g, '');
         let val = this.value;
         let points = val.split(' ');
-        if (!points[0]) points[0] = '~';pqapaap
+        if (!points[0]) points[0] = '~';
         if (!points[1]) points[1] = '~';
         if (!points[2]) points[2] = '~';
         $(this).autocomplete({
