@@ -41,20 +41,20 @@ body {
     position: fixed;
     left: 0;
     top: 10vw;
-    height:0;
+    height: 0;
     width: 100vw;
     background: #f1f2ff;
     z-index: 10;
     overflow: scroll;
-    transition:.5s;
+    transition: .5s;
 }
 
 #menu:checked+div {
-    height:100vw;
+    height: 100vw;
 }
 
 #menu+div>label {
-    position:relative;
+    position: relative;
     display:block;
     width:40vw;
     height:30vw;
@@ -93,43 +93,43 @@ body {
 .setting {
     position:fixed;
     top:110vw;
-    display:flex;
+    display:none;
     height:15vw;
     width:100vw;
     background:#f1f2ff;
-    opacity:0;
+    z-index: -5;
 }
 
 #menu:checked+div>.setting {
-    opacity:1;
+    display: flex;
 }
 
 .setting>a {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:.8em;
-    width:50vw;
-    color:#000;
-    text-decoration:none;
-    border:1px #333 solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .8em;
+    width: 50vw;
+    color: #000;
+    text-decoration: none;
+    border: 1px #333 solid;
 }
 
 .set {
-    font-size:.9em;
-    width:90vw;
-    margin:5vw;
+    font-size: .9em;
+    width: 90vw;
+    margin: 5vw;
 }
 
 .set>label {
-    font-size:.9em;
-    display:block;
-    margin-left:5vw;
+    font-size: .9em;
+    display: block;
+    margin-left: 5vw;
 }
 
 .set>input {
-    width:50vw;
-    margin-left:10vw;
+    width: 50vw;
+    margin-left: 10vw;
 }
 
 header>div:first-child {
@@ -214,6 +214,7 @@ main {
     width: 80vw;
     margin: auto;
     white-space: nowrap;
+    border-radius: 1vw;
 }
 
 label code {
@@ -221,7 +222,7 @@ label code {
     background: #efe;
     color: lightgreen;
     border-radius: 1vw;
-    padding:0 1vw;
+    padding: 0 1vw;
 }
 
 input {
@@ -230,7 +231,8 @@ input {
     width: 80vw;
 }
 
-input[type="text"]+div {
+input[type="text"]+div,
+input[type="number"]+div {
     position: absolute;
     font-size: .8em;
     background: #eee;
@@ -240,9 +242,11 @@ input[type="text"]+div {
     opacity: 0;
     z-index: -1;
     transition: .5s;
+    display:block;
 }
 
-input[type="text"]:hover+div {
+input[type="text"]:hover+div,
+input[type="number"]:hover+div {
     transform: translateY(0);
     opacity: 1;
     z-index: 1;
@@ -252,8 +256,11 @@ input[type="text"]:hover+div {
     max-height: 50vw;
     width: 50vw;
     overflow-y: scroll;
+    background:rgba(0,0,0,.95) !important;
+    color:#eee !important;
+    border:none !important;
 }
-.ui-autocomplete * {font-size:.9em;border:.1px solid gray;}
+.ui-autocomplete * {font-size:.9em;}
 
 select {
     font-size: .8em;
