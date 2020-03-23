@@ -139,21 +139,38 @@
             <input class='type' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
             <label><i class='fad fa-square fa-fw c'></i>格子ID</label>
-            <input type='number' oninput='this.value=this.value.replace(/\D/,"")'/>
+            <input type='number' oninput='this.value=this.value.replace(/\D/,"");cm.id=this.value;'/>
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
             <h1><i class='fad fa-square fa-fw c' ></i>物品</h1>
-            <label>/replaceitem的位置用容器类型和格子ID来表示,例<code>armor.chest 0</code></label>
+            <label>/replaceitem的物品用物品ID,数量和特殊值来表示,例<code>command_block 0</code></label>
             <label>语法：</label>
-            <code>/replaceitem &lt;entity|block&gt; &lt;目标|坐标&gt; &lt;容器类型&gt; &lt;格子id&gt;</code>
-            <label>你可以在下面填入选择器或玩家名</label>
+            <code>/replaceitem &lt;entity|block&gt; &lt;目标|坐标&gt; &lt;容器类型&gt; &lt;格子id&gt; &lt;物品ID&gt; [数量] [特殊值]</code>
+            <label>你可以在下面填入物品ID和特殊值</label>
             <br />
-            <label><i class='fad fa-square fa-fw c'></i>容器类型</label>
-            <input class='type' type='text' />
+            <label><i class='fad fa-square fa-fw c'></i>物品ID</label>
+            <input class='item' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
-            <label><i class='fad fa-square fa-fw c'></i>格子ID</label>
-            <input type='number' oninput='this.value=this.value.replace(/\D/,"")'/>
+            <label><i class='fad fa-square fa-fw c'></i>数量</label>
+            <input type='number' oninput='this.value=this.value.replace(/\D/,"");cm.n=this.value;'/>
+            <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+            <label><i class='fad fa-square fa-fw c'></i>特殊值</label>
+            <input type='number' oninput='this.value=this.value.replace(/\D/,"");cm.d=this.value;'/>
+            <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
+        </div>
+        <div class='block'>
+            <h1><i class='fad fa-square fa-fw c' ></i>物品json</h1>
+            <label>/replaceitem的物品json用json文本来表示,目前be只有两个nbt.分别为<code>CanPlaceOn</code>和<code>CanDestroy</code>,例</label>
+            <code>{"minecraft:can_place_on":{"blocks":["command_block"]}}</code>
+            <label>如果是多个方块，请用<code>,</code>(不要和<code>，</code>弄混)分隔,例</label>
+            <code>{"minecraft:can_place_on":{"blocks":["command_block","acacia_door"]}}</code>
+            <label>语法：</label>
+            <code>/replaceitem &lt;entity|block&gt; &lt;目标|坐标&gt; &lt;容器类型&gt; &lt;格子id&gt; &lt;物品ID&gt; [数量] [特殊值] [json]</code>
+            <label>你可以在下面填入物品ID和特殊值</label>
+            <br />
+            <label><i class='fad fa-square fa-fw c'></i>物品json</label>
+            <input class='json' type='text' />
             <div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>
         </div>
         <div class='block'>
