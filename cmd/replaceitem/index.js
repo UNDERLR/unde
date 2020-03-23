@@ -19,11 +19,24 @@ function setting(key,val) {
     if(key==='tb')$('label code').css('background',val);
     if(key==='bb')$('body').css('background',val);
 }
+let cm = {
+    cmd:'/replaceitem',
+    ty:'entity',
+    ta:'',
+    r:'',
+    id:'',
+    it:'',
+    n:'',
+    d:'',
+    json:''
+};
 function mod(m) {
     if(m==='entity'){
+        cm.ty = 'entity';
         $('.m').html("<h1><i class='fad fa-meh-blank fa-fw c' ></i>目标</h1><label>/replaceitem的目标用选择器来表示,例<code>@a</code>,也可以用玩家名来表示来表示,例<code>UNDERLR</code></label><label>语法：</label><code>/replaceitem entity <目标></code><label>你可以在下面填入选择器或玩家名</label><br /><label><i class='fad fa-meh-blank fa-fw c' ></i>目标</label><input class='tar' type='text' /><div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>");
     }
     if(m==='block'){
+        cm.ty = 'block';
         $('.m').html("<h1><i class='fad fa-map-marker fa-fw c' ></i>位置</h1><label>/replaceitem的方块用坐标来表示,例<code>1 2 3</code></label><label>语法：</label><code>/replaceitem block <位置></code><label>你可以在下面填入方块位置</label><br /><label><i class='fad fa-map-marker fa-fw c' ></i>位置</label><input class='pot' type='text' /><div><i class='fad fa-check-square fa-fw'></i>没有任何问题</div>");
     }
 }
@@ -54,6 +67,7 @@ $(function () {
         } else {
             $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border', '').css('color', '');
         }
+        cm.tar = val;
     });
     $('.tar').keyup(function(){
     let val = this.value.replace(/\s/,'');
@@ -79,7 +93,7 @@ $(function () {
         "name",
         "type"
         ];
-        let tartip = [
+    let tartip = [
         "x点",
         "y点",
         "z点",
@@ -137,6 +151,7 @@ $(function () {
             $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border', '').css('color', '');
         }
     }
+    cm.ta = val;
 });
     $('.type').keyup(function(){
         let val = this.value.replace(/\s/,'');
@@ -167,13 +182,14 @@ $(function () {
                 $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border', '').css('color', '');
             }
         }
+        cm.r = val;
     });
-    $('.items').keyup(function () {
+    $('.item').keyup(function () {
         this.value = this.value.replace(/[^a-z0-9_:\-]/g, '');
         let val = this.value;
         $(this).autocomplete({
             delay: 0,
-            source: block_id,
+            source: item_id,
             minLength: -1,
             position: { my: 'left bottom', at: 'left top' }
         });
@@ -183,8 +199,28 @@ $(function () {
         } else {
             $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border', '').css('color', '');
         }
+        cm.it = val;
     });
-    $('.test').keyup(function () {
+    $('.json').keyup(function () {
+        //this.value = this.value.replace(/[^a-z0-9_:\-]/g, '');
+        let val = this.value;
+        $(this).autocomplete({
+            delay: 0,
+            source: [{label:'CanPlaceOn-可放置于..',value:'{"minecraft:can_place_on":{"blocks":[""]}}'},
+                    {label:'CanDestroy-可破坏..',value:'{"minecraft:can_destroy":{"blocks":[""]}}'}
+                    ],
+            minLength: -1,
+            position: { my: 'left bottom', at: 'left top' }
+        });
+        /*if (/[^a-z0-9_:\-]|^\d+/g.test(val)) {
+            let et = val.match(/[^a-z0-9_:\-]|^\d+/g);
+            $('input:hover+div').html(`<i class='fad fa-times-square fa-fw'></i>错误:错误的${et}`).css('border', '#ff6b81 1vw solid').css('color', '#ff4757');
+        } else {
+            $('input:hover+div').html('<i class="fad fa-check-square fa-fw"></i>没有任何问题').css('border', '').css('color', '');
+        }*/
+        cm.json = val;
+    });
+    /*$('.test').keyup(function () {
         this.value = this.value.replace(/^\s|\s{2}$|[^/0-9a-z\d~\-\.\s^]/, '');
         let val = this.value;
         let cmd = val.split(' ');
@@ -195,17 +231,14 @@ $(function () {
             minLength: -1,
             position: { my: 'left bottom', at: 'left top' }
         });
-    });
+    });*/
     $('.open').click(function () {
-        let cmd = `/fill ${$('.point.a').val()} ${$('.point.b').val()} ${$('.blocks.a').val()} ${$('.data.a').val()}`;
-        let a = document.getElementById('mod').selectedIndex;
-        let b = document.getElementById('mod').options;
-        if ($('select.mod').selectedIndex === 4) {
-            cmd = `${cmd} replace ${$('.blocks.b').val()} ${$('.data.b').val()}`;
-        } else {
-            cmd = `${cmd} ${b[a].text}`;
-        }
-        $('#output').val(cmd);
+        let s = ' ';
+        let cmt = cm.cmd + s + cm.ty + s + cm.ta + s + cm.r + s + cm.id + s + cm.it;
+        if(!cm.n==='')cmt=cmt+s+cm.n;
+        if(!cm.d==='')cmt=cmt+s+cm.d;
+        if(!cm.json==='')cmt=cmt+s+cm.json;
+        $('#output').val(cmt);
     });
     $('button.open,button.close').click(function(){
         $('div.output').toggleClass('show');
@@ -216,3 +249,4 @@ $(function () {
         alert('复制成功');
     });
 });
+    
