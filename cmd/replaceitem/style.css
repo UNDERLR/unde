@@ -11,6 +11,11 @@ body {
     margin-top: 10vw;
 }
 
+a {
+    color:#000;
+    text-decoration:none;
+}
+
 .c {color: lightgreen;}
 
 .header {
