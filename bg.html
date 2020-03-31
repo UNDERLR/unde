@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport"
             content="width=device-width, initial-scale=1.0, max=imum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+        <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js'></script>                                                                        
 
         <style>
             * {
@@ -11,11 +12,17 @@
                 margin: 0;
                 text-align: center;
                 font-family:/*"Lucida Console", Monaco, monospace,*/aArial, Helvetica, sans-serif;
-                font-size:1.7em;
-                font-weight:900;
             }
             body {
-                min-height:100vh;
+                min-height:110vh;
+            }
+            p {
+                font-size:5em;
+                font-weight:900;
+            }
+            main {
+                width:100vw;
+                height:100vh;
                 display:flex;
                 justify-content:center;
                 align-items:center;
@@ -27,6 +34,10 @@
         </script>
     </head>
     <body>
-        <p>淦</p>
+        <main>
+            <p>hello world</p>
+        </main>
+        <input onkeyup='$("p").html(this.value)'/>
+        <button onclick='window.scrollTo(0,0)'>全屏</button>
     </body>
 </html>
