@@ -1,0 +1,100 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-family: "Lucida Console", Monaco, monospace,sans-serif;
+    font-size: 14px;
+    line-height:1.2em;
+    
+}
+body {
+    min-height: 100vh;
+    width: 100vw;
+    margin-top: 2em;
+    margin-bottom: 3em;
+    background: #2f3542;
+}
+.menu {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 2em;
+    background: #57606f;
+    list-style: none;
+    color: #fff;
+    padding-left: 10vw;
+}
+.menu label {
+    width: 15vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+}
+
+.menu input {
+    display: none;
+}
+header {
+    width: 10vw;
+    min-height: 100vh;
+    overflow-y: hidden;
+    float: left;
+    background: #747d8c;
+    user-select: none;
+}
+header p {
+    color: #fff;
+    text-align: center;
+    box-sizing: boder-box;
+}
+main {
+    margin-left: 5vw;
+}
+textarea {
+    position: absolute;
+    background: transparent;
+    outline: none;
+    border: none;
+    resize: none;
+    color: transparent;
+    caret-color:#fff;
+    z-index: 5;
+}
+textarea::selection {
+    color: transparent;
+    background: #ced6e050;
+}
+.view {
+    color: #fff;
+}
+textarea,
+textarea + div {
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 50em;
+    min-width: 90vw;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 2em;
+    background: #57606f;
+    color: #fff;
+}
+footer>div {
+    float: right;
+    height: 100%;
+    min-width: 10vw;
+    padding: 0 .5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.length {
+    
+}
+
+
+
