@@ -12,22 +12,33 @@
     </head>
     <body>
         <div class="menu">
-            <label for="text">文本</label>
-            <input type="checkbox" id="text"/>
+            <label class="text">文本</label>
             <div></div>
-            <label>查找</label>
+            <label class="search" onclick='$(".search+div").toggleClass("hidden",500)'>查找</label>
+            <div class="hidden">
+                <input type="text"/>
+                <input/>
+                <button>全部替换</button>
+            </div>
         </div>
         <header>
             <p>1</p>
         </header>
         
         <main>
-            <textarea class="code"></textarea>
+            <textarea cols="500" class="code"></textarea>
             <div class="view"></div>
         </main>
         
         <footer>
-            <div class="length">0字</div>
+            <div class="length" onclick='$(".length+div").toggleClass("hidden")'>
+                8字
+            </div>
+            <div class="hidden">
+                8字符<br/>
+                8字符(不含换行)<br/>
+                8字符(不含空格和换行)
+            </div>
             <div class="light">高亮</div>
         </footer>
        
