@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="index.js"></script>
+        <style>
+            * {
+                padding: 9;
+                margin: 0;
+            }
+            .input {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                width: 100vw;
+                min-height: 1em;
+            }
+            .in-box {
+                background-color: #fff;
+                padding: 0.1em 0.2em;
+                border: solid black 1px;
+                flex: 1;
+                font-family: monospace;
+                word-break: break-all;
+            }
+            button {
+                background-color: #fff;
+                border: solid 1px;
+            }
+            button:hover {
+                background-color: lightgreen;
+                border: solid 1px;
+            }
+            .output {
+                width: 100vw;
+            }
+            .cmd {
+                padding: 0.5em 1em;
+                overflow-y: scroll;
+                width: 100vw;
+                height: 3em;
+                background-color: lightgray;
+                border-bottom: 1px solid #000;
+            }
+            .out {
+                padding: 0.5em 1em;
+                overflow-y: scroll;
+                width: 100vw;
+                height: 5em;
+                background-color: lightgreen;
+            }
+            .o:not(:last-child) .out {
+                border-bottom: 1px solid #000;
+            }
+            .pre {
+                position: fixed;
+                bottom: 0;
+                left: 0.5em;
+                min-width: 5vw;
+                min-height: 1em;
+                background-color: lightgreen;
+                opacity: 0;
+                padding: 0.5em 0.2em;
+                word-break: break-all;
+                z-index: -1;
+            }
+            @media only screen and (max-width: 100vh) {
+                .pre {
+                    left: 0.5em !important;
+                }
+                .in-box:focus + .pre {
+                    opacity: 1;
+                    z-index: 1;
+                }
+            }
+            .in-box:hover + .pre {
+                opacity: 1;
+                z-index: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="input">
+            <div class="in-box" contenteditable="true"></div>
+            <div class="pre"></div>
+            <button onclick="ev()">运行</button>
+        </div>
+        <div class="output"></div>
+
+        <script>
+            document.documentElement.addEventListener("keydown", (e) => key(e));
+            document.documentElement.addEventListener("keydown", (e) => hisk(e));
+            document.documentElement.addEventListener("keyup", () => up());
+            document.querySelector(".in-box").addEventListener("mousemove", (e) => pre(e));
+
+            let his = [];
+            function hisc() {
+                let cookie = document.cookie;
+                let cArray = cookie.split(";");
+                for (let i = 0; i < cArray.length; i++) {
+                    let test = cArray[i];
+                    if (/hiscmd/.test(test)) {
+                        cArray = test.split("=");
+                        his = cArray[1].split(",");
+                    }
+                }
+            }
+            hisc();
+            var index;
+            function hisk(e) {
+                if (typeof index !== "number") index = -1;
+                if (e.code === "ArrowUp" || e.code === "ArrowDown") {
+                    let cm = "";
+                    if (e.code === "ArrowUp" && index < his.length) {
+                        index = index + 1;
+                        if (index === -1) {
+                            cm = "";
+                        } else cm = his[index];
+                        document.querySelector(".in-box").innerHTML = cm;
+                    }
+                    if (e.code === "ArrowDown" && index > -1) {
+                        index = index - 1;
+                        if (index === -1) {
+                            cm = "";
+                        } else cm = his[index];
+                        document.querySelector(".in-box").innerHTML = cm;
+                    }
+                }
+            }
+
+            function pre(e) {
+                let inputBoxH = e.path[0].offsetHeight;
+
+                document.querySelector(".pre").style.bottom = inputBoxH + 5 + "px";
+                // document.querySelector(".pre").style.left = e.clientX + 10 + "px";
+
+                // console.log(e);
+            }
+
+            function up() {
+                let cm = document.querySelector(".in-box").innerHTML;
+                let o;
+                try {
+                    o = JSON.stringify(eval(cm));
+                } catch (error) {
+                    if (cm === undefined || cm === "") {
+                        o = "请填入表达式";
+                    } else o = error;
+                }
+                document.querySelector(".pre").innerHTML = o;
+            }
+
+            function key(e) {
+                if (e.ctrlKey === true && e.code === "Enter") ev();
+
+                // console.log(e);
+            }
+            function ev() {
+                let cm = document.querySelector(".in-box").innerHTML;
+                let o;
+                his.unshift(cm);
+                document.cookie = `hiscmd=${his}`;
+                document.querySelector(".in-box").innerHTML = "";
+                try {
+                    o = JSON.stringify(eval(cm)).replace(/(;|{|\[[^\]]|,)/g, function (t) {
+                        return t + "<br>";
+                    });
+                } catch (error) {
+                    if (cm === undefined || cm === "") {
+                        o = "请填入表达式";
+                    } else o = error;
+                }
+
+                $(".output").append(`<div class="o"><div class="cmd">${cm}</div><div class="out">${o}</div></div>`);
+            }
+        </script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </body>
+</html>
