@@ -20,7 +20,7 @@ function highLight(txt) {
     txt = txt.replace(/"[^"\n]{1,}"/g, function (t) {
         return `<span class='txt'>${t}</span>`;
     });
-    txt = txt.replace(/(?<=\s)@(a|s|p|r|e)(?=\s?)/g, function (t) {
+    txt = txt.replace(/(?<=\s)@(a|s|p|r|e)(?=\s|\[)/g, function (t) {
         return `<span class='at'>${t}</span>`;
     });
     txt = txt.replace(/(?<=\s|~)-?\d+(\.\d+)?/g, function (t) {
