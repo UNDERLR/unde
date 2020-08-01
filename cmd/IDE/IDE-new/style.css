@@ -86,6 +86,10 @@ body {
     font-style: oblique;
     color: #66d9ef;
 }
+.mod {
+    font-family: "Courier New", Courier, monospace;
+    color: #66d9ef;
+}
 .err {
     font-family: "Courier New", Courier, monospace;
     color: red;
@@ -94,4 +98,25 @@ body {
     font-family: "Courier New", Courier, monospace;
     font-style: oblique;
     color: #fd971f;
+}
+.fh {
+    font-family: "Courier New", Courier, monospace;
+    color: #f92672;
+}
+.sel {
+    font-family: "Courier New", Courier, monospace;
+    color: #A6E22E;
+}
+span > span {
+    color: inherit !important;
+}
+.tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #272822;
+    min-height: 10vh;
+    min-width: 10vw;
+    z-index: 1;
+    border: #40413a solid .5vw;
 }
