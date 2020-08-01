@@ -105,18 +105,43 @@ body {
 }
 .sel {
     font-family: "Courier New", Courier, monospace;
-    color: #A6E22E;
+    color: #a6e22e;
 }
 span > span {
     color: inherit !important;
 }
 .tip {
+    display: none;
     position: absolute;
     left: 0;
     top: 0;
     background-color: #272822;
-    min-height: 10vh;
-    min-width: 10vw;
+    max-height: 20vh;
+    width: 20vw;
     z-index: 1;
-    border: #40413a solid .5vw;
+    border: #40413a solid 2px;
+    color: #ffffff;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+.tip div:hover {
+    position: relative;
+    background-color: #ffffff20;
+}
+.tip div span:last-child {
+    left: 2em;
+    top: 5vw;
+    background-color: #272822;
+    max-height: 20vh;
+    width: 20vw;
+    z-index: 2;
+    border: #40413a solid 2px;
+    color: #ffffff;
+    overflow-x: visible;
+    position: fixed;
+    display: none;
+}
+.tip div:hover span:last-child {
+    display: block;
+    transform: translate(25vw,-1em);
 }
