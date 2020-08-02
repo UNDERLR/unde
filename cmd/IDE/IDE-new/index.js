@@ -30,7 +30,7 @@ function highLight(txt) {
     txt = txt.replace(/"[^"\n]{1,}"/g, function (t) {
         return `<span class='txt'>${t}</span>`; //字符串
     });
-    txt = txt.replace(/(?<=\s|])@(a|s|p|r|e)(?=\s?)/g, function (t) {
+    txt = txt.replace(/(?<=\s|])@(a|s|p|r|e|c|v)(?=\s?)/g, function (t) {
         return `<span class='at'>${t}</span>`; //@
     });
     txt = txt.replace(/(?<=\[|,)(x|y|z|distance‌‌|r|rm‌‌|dx|dy|dz|scores|tag|team‌‌|limit|sort‌‌|c‌‌|level‌‌|l|lm‌‌|gamemode‌‌|m‌‌|name|x_rotation‌‌|rx|rxm‌‌|y_rotation‌‌|ry|rym‌‌|type|nbt‌‌|advancements‌‌|predicate‌‌)(?=\=)/g, function (t) {
@@ -67,37 +67,86 @@ function over(e) {
 }
 
 let val = "";
+let mod = "cmd";
 function key(e) {
+    console.log(e.key);
     let tip = document.querySelector(".tip");
     tip.innerHTML = "";
     tip.style.display = "block";
-    val += e.key;
-    if (e.key === "Enter" || e.code === " " || e.code === "BracketRight" || e.key === "," || e.key === "Backspace") {
+    if (/[a-zA-Z]/.test(e.key) && e.key.length === 1) val += e.key;
+    if (e.key === "Backspace" && val.length > 0) val = val.substr(0, val.length - 1);
+    if (val === "type" && e.key === "=") {
+        mod = "ID";
+        val = "";
+    }
+    switch (e.key) {
+        case "@":
+            val = "@";
+            mod = "at";
+            break;
+        case "[":
+            if (mod === "at") mod = "sel";
+            val = "";
+            break;
+    }
+    if (e.key === "Enter" || e.code === "Space" || e.code === "BracketRight" || e.key === ",") {
         tip.style.display = "none";
+        mod = "cmd";
         val = "";
     }
     console.log(val);
-    let tips = search(val, "cmd");
+    let tips = search(val, mod);
     for (let i = 0; i < tips["results"].length; i++) {
         tip.innerHTML = tip.innerHTML + `<div>${tips["results"][i]}<span>${tips["comments"][i]}</span></div>`;
     }
 }
 
 function search(t, m) {
+    console.log(m);
     let o = { results: [], comments: [] };
-    if (m === "cmd") {
-        for (let i = 0; i < cmds.length; i++) {
-            let test = cmds[i];
-            if (test.includes(t)) {
-                o.results.push(test);
-                o.comments.push(cmdComments[i]);
+    switch (m) {
+        case "cmd":
+            for (let i = 0; i < cmds.length; i++) {
+                let test = cmds[i];
+                if (test.includes(t)) {
+                    o.results.push(test);
+                    o.comments.push(cmdComments[i]);
+                }
             }
-        }
+            break;
+        case "at":
+            for (let i = 0; i < at.length; i++) {
+                let test = at[i];
+                if (test.includes(t)) {
+                    o.results.push(test);
+                    o.comments.push(atComments[i]);
+                }
+            }
+            break;
+        case "sel":
+            for (let i = 0; i < sel.length; i++) {
+                let test = sel[i];
+                if (test.includes(t)) {
+                    o.results.push(test);
+                    o.comments.push(selComments[i]);
+                }
+            }
+            break;
+        case "ID":
+            for (let i = 0; i < IDs.length; i++) {
+                let test = IDs[i];
+                if (test.includes(t)) {
+                    o.results.push(test);
+                    o.comments.push(IDComments[i]);
+                }
+            }
+            break;
     }
+
     for (let i = 0; i < o["results"].length; i++) {
         const test = o["results"][i];
         o["results"][i] = test.replace(t, function (txt) {
-            return `<span style="font-weight: bolder !important;color:gray;">${txt}</span>`;
+            return `<span style="color:gray;">${txt}</span>`;
         });
     }
     return o;

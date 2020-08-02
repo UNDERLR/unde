@@ -113,11 +113,11 @@ span > span {
 .tip {
     display: none;
     position: absolute;
-    left: 0;
+    left: 2.5em;
     top: 0;
     background-color: #272822;
     max-height: 20vh;
-    width: 20vw;
+    width: 40vw;
     z-index: 1;
     border: #40413a solid 2px;
     color: #ffffff;
@@ -143,5 +143,5 @@ span > span {
 }
 .tip div:hover span:last-child {
     display: block;
-    transform: translate(25vw,-1em);
+    transform: translate(45vw,0);
 }
