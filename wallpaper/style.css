@@ -1,0 +1,167 @@
+* {
+    padding: 0;
+    margin: 0;
+    line-height: 1em;
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+.bg {
+    position: fixed;
+    z-index: -2;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("https://www.bing.com/th?id=OHR.MakeHay_ZH-CN5759590757_1920x1080.jpg");
+}
+
+header {
+    display: flex;
+    align-items: center;
+    height: 5vh;
+    width: 100vw;
+    position: relative;
+    background-color: rgb(0, 0, 0, 0);
+    transition: 0.5s cubic-bezier(0.22, 0.58, 0.12, 0.98);
+    transform: translateY(-70%);
+    transition-delay: 1s;
+    z-index: 1;
+}
+header:hover {
+    transition-delay: 0s;
+    background-color: rgb(0, 0, 0, 0.5);
+    transform: translateY(0);
+}
+/* svg格式化 */
+embed {
+    height: 100%;
+    user-select: none;
+    cursor: text;
+}
+
+.right {
+    position: absolute;
+    right: 0;
+    display: flex;
+}
+
+.right > span {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 5vh;
+    margin: 0px 1em;
+}
+.right > span + div {
+    color: white;
+    transition-delay: 1s;
+    top: 0;
+    position: absolute;
+    opacity: 0;
+    transform: translate(100vw, 5vh);
+    background-color: rgb(0, 0, 0, 0.5);
+    width: 0;
+    height: 0;
+    padding: 1em;
+    text-align: center;
+    transition: 1s linear;
+    overflow: hidden;
+    overflow-y: scroll;
+    z-index: -1;
+}
+.right > span + div > * {
+    margin: 0 auto;
+}
+.right > span + div .cityName {
+    font-size: 2em;
+    line-height: 2em;
+    font-weight: bolder;
+}
+.right > span + div::before {
+    content: "";
+    width: 1vw;
+    height: 1vw;
+    transform: rotate(45deg);
+    background-color: gray;
+}
+.right > span:hover + div,
+.right > span + div:hover {
+    transition: 0.5s;
+    transform: translate(-80%, 5vh);
+    width: 20vw;
+    transition-delay: 0s;
+    opacity: 1;
+    height: 40vh;
+}
+
+.weatherIcon {
+    line-height: 4em;
+    height: 2em;
+    width: auto;
+    margin: 0.5em;
+}
+
+.temperature {
+    line-height: 2em;
+}
+/* 表格排列 */
+td > div {
+    height: 1.5em;
+    text-align: center;
+}
+td {
+    height: 4em;
+    width: 30%;
+    margin: 0.5em;
+}
+table {
+    margin: 0 auto;
+}
+.lastTime {
+    margin-top: 1em;
+    font-size: smaller;
+}
+
+.data {
+    text-align: center;
+    font-size: 5vh;
+    color: white;
+    background-color: rgb(0, 0, 0, 0.5);
+    transition: 0.5s cubic-bezier(0.22, 0.58, 0.12, 0.98);
+    width: 8em;
+    height: 5vh;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    z-index: 2;
+    transition-delay: 1s;
+    overflow: hidden;
+}
+.data:hover {
+    transition-delay: 0s;
+    height: 20vh;
+    width: 10em;
+}
+.time {
+    transition: 0.5s cubic-bezier(0.22, 0.58, 0.12, 0.98);
+    line-height: 1em;
+    transition-delay: 1s;
+}
+.data:hover .time{
+    transition-delay: 0s;
+    line-height: 2em;
+}
+.day{
+    font-size: 3vh;
+}
+.data > div:nth-child(1) {
+    margin: 0 1em;
+}
+header:hover + .data {
+    transition-delay: 0s;
+    background-color: rgb(0, 0, 0, 0);
+}
