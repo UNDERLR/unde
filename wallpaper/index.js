@@ -1,78 +1,85 @@
 let a = function () {
-    console.log($("#test").html());
-    $.getJSON("https://api.map.baidu.com/location/ip", "ak=QudmRRyjBoMaljD99pP5IqYegh7Zg8S3&coor=bd09ll", function (d) {
-        console.log(d);
-        
-        $.getJSON("https://www.tianqiapi.com/api/", "appid=23035354&appsecret=8YvlPNrz&version=v9&cityid=0&city=%E9%9D%96%E8%A5%BF&ip=0&callback=0", function (a) {
-            console.log(a);
-            $(".cityName").html(a.city);
-            $(".cityCountry").html(a.country);
-            let today = a.data[0];
-            $(".temperature")
-                .attr("title", "气温：" + today.hours[0].tem + "℃")
-                .html(today.tem + "℃");
+    let city = function () {
+        let url = window.location.search;
+        url = url.replace(/\?/, "");
+        url = url.split("&");
+        let c;
+        for (let i = 0; i < url.length; i++) {
+            const test = url[i];
+            if (/^city/.test(test)) c = test.replace(/^city=/, "");
+        }
+        return c;
+    };
+    $.getJSON("https://www.tianqiapi.com/api/", `appid=23035354&appsecret=8YvlPNrz&version=v9&cityid=0&city=${city()}&ip=0&callback=0`, function (a) {
+        console.log(a);
+        $(".cityName").html(a.city);
+        $(".cityCountry").html(a.country);
+        let today = a.data[0];
+        $(".temperature")
+            .attr("title", "气温：" + today.hours[0].tem + "℃")
+            .html(today.tem + "℃");
 
-            // if (/转/g.test(today.hours[0].wea)) {
-            //     let day = today.hours[0].wea_day_img;
-            //     let night = today.wea_night_img;
-            //     $(".weatherIcon")
-            //         .attr("title", "天气" + today.hours[0].wea)
-            //         .html(`<embed src="svg/day/${day}.svg" title="${today.wea_day}" type="image/svg+xml" />  <embed src="svg/gang.svg" type="image/svg+xml" />  <embed src="svg/night/${night}.svg" title="${today.wea_night}" type="image/svg+xml" />`);
-            // } else
-            if (today.hours[0].hours.match(/\d+/g) * 1 > 6 && today.hours[0].hours.match(/\d+/g) * 1 < 18) {
-                $(".weatherIcon")
-                    .attr("title", "天气:" + today.hours[0].wea)
-                    .html(`<embed src="svg/day/${today.hours[0].wea_img}.svg" title="${today.hours[0].wea}" type="image/svg+xml" />`);
-            } else
-                $(".weatherIcon")
-                    .attr("title", "天气:" + today.hours[0].wea)
-                    .html(`<embed src="svg/night/${today.hours[0].wea_img}.svg" title="${today.hours[0].wea}" type="image/svg+xml" />`);
-            $(".humidity")
-                .html(`<embed src="svg/shidu.svg" title="${"相对湿度：" + today.humidity}" type="image/svg+xml" /><br> ` + today.humidity)
-                .attr("title", "相对湿度：" + today.humidity);
+        // if (/转/g.test(today.hours[0].wea)) {
+        //     let day = today.hours[0].wea_day_img;
+        //     let night = today.wea_night_img;
+        //     $(".weatherIcon")
+        //         .attr("title", "天气" + today.hours[0].wea)
+        //         .html(`<embed src="svg/day/${day}.svg" title="${today.wea_day}" type="image/svg+xml" />  <embed src="svg/gang.svg" type="image/svg+xml" />  <embed src="svg/night/${night}.svg" title="${today.wea_night}" type="image/svg+xml" />`);
+        // } else
+        if (today.hours[0].hours.match(/\d+/g) * 1 > 6 && today.hours[0].hours.match(/\d+/g) * 1 < 18) {
+            $(".weatherIcon")
+                .attr("title", "天气:" + today.hours[0].wea)
+                .html(`<embed src="svg/day/${today.hours[0].wea_img}.svg" title="${today.hours[0].wea}" type="image/svg+xml" />`);
+        } else
+            $(".weatherIcon")
+                .attr("title", "天气:" + today.hours[0].wea)
+                .html(`<embed src="svg/night/${today.hours[0].wea_img}.svg" title="${today.hours[0].wea}" type="image/svg+xml" />`);
+        $(".humidity")
+            .html(`<embed src="svg/shidu.svg" title="${"相对湿度：" + today.humidity}" type="image/svg+xml" /><br> ` + today.humidity)
+            .attr("title", "相对湿度：" + today.humidity);
 
-            $(".sunrise")
-                .html(`<embed src="svg/sunrise.svg" title="${"日出：" + today.sunrise}" type="image/svg+xml" /> <br>` + today.sunrise)
-                .attr("title", "日出：" + today.sunrise);
-            $(".sunset")
-                .html(`<embed src="svg/sunset.svg" title="${"日落：" + today.sunset}" type="image/svg+xml" /> <br>` + today.sunset)
-                .attr("title", "日落：" + today.sunset);
+        $(".sunrise")
+            .html(`<embed src="svg/sunrise.svg" title="${"日出：" + today.sunrise}" type="image/svg+xml" /> <br>` + today.sunrise)
+            .attr("title", "日出：" + today.sunrise);
+        $(".sunset")
+            .html(`<embed src="svg/sunset.svg" title="${"日落：" + today.sunset}" type="image/svg+xml" /> <br>` + today.sunset)
+            .attr("title", "日落：" + today.sunset);
 
-            let winSpeed = today.hours[0].win_speed.match(/\d+/);
-            $(".wind").attr("title", `${today.hours[0].win} ${today.hours[0].win_speed}`).html(`<span class="windIcon"><embed src="svg/wind/wind-${winSpeed}.svg" type="image/svg+xml" /></span><br>${today.hours[0].win} ${today.hours[0].win_speed}`);
-            switch (today.hours[0].win) {
-                case "北风":
-                    $(".windIcon embed").attr("style", "transform: rotate(0deg);");
-                    break;
-                case "东北风":
-                    $(".windIcon embed").attr("style", "transform: rotate(45deg);");
-                    break;
-                case "东风":
-                    $(".windIcon embed").attr("style", "transform: rotate(90deg);");
-                    break;
-                case "东南风":
-                    $(".windIcon embed").attr("style", "transform: rotate(135deg);");
-                    break;
-                case "南风":
-                    $(".windIcon embed").attr("style", "transform: rotate(180deg);");
-                    break;
-                case "西南风":
-                    $(".windIcon embed").attr("style", "transform: rotate(225deg);");
-                    break;
-                case "西风":
-                    $(".windIcon embed").attr("style", "transform: rotate(270deg);");
-                    break;
-                case "西北风":
-                    $(".windIcon embed").attr("style", "transform: rotate(315deg);");
-                    break;
+        let winSpeed = today.hours[0].win_speed.match(/\d+/);
+        $(".wind").attr("title", `${today.hours[0].win} ${today.hours[0].win_speed}`).html(`<span class="windIcon"><embed src="svg/wind/wind-${winSpeed}.svg" type="image/svg+xml" /></span><br>${today.hours[0].win} ${today.hours[0].win_speed}`);
+        switch (today.hours[0].win) {
+            case "北风":
+                $(".windIcon embed").attr("style", "transform: rotate(0deg);");
+                break;
+            case "东北风":
+                $(".windIcon embed").attr("style", "transform: rotate(45deg);");
+                break;
+            case "东风":
+                $(".windIcon embed").attr("style", "transform: rotate(90deg);");
+                break;
+            case "东南风":
+                $(".windIcon embed").attr("style", "transform: rotate(135deg);");
+                break;
+            case "南风":
+                $(".windIcon embed").attr("style", "transform: rotate(180deg);");
+                break;
+            case "西南风":
+                $(".windIcon embed").attr("style", "transform: rotate(225deg);");
+                break;
+            case "西风":
+                $(".windIcon embed").attr("style", "transform: rotate(270deg);");
+                break;
+            case "西北风":
+                $(".windIcon embed").attr("style", "transform: rotate(315deg);");
+                break;
 
-                default:
-                    break;
-            }
-            $(".lastTime").html("最后更新于" + a.update_time);
-        });
+            default:
+                break;
+        }
+        $(".lastTime").html("最后更新于" + a.update_time);
     });
 };
+
 a();
 window.setInterval(a(), 600000);
 
@@ -129,6 +136,6 @@ function t() {
 //         console.log(a.copyright);
 //     });
 // }
-bing();
+// bing();
 
 window.setInterval(() => t(), 1000);
