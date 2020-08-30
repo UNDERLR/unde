@@ -131,6 +131,11 @@ function t() {
     $(".day").html(`${year()}-${mouth()}-${day()}<br>${week[time.getDay()]}`);
 }
 
+function his() {
+    $.get("https://api.muxiaoguo.cn/api/lishijr", function (a) {
+        console.log(a);
+    });
+}
 // function bing() {
 //     $.getJSON("https://cn.bing.com/HPImageArchive.aspx", "format=js&cc=jp&idx=0&n=1", function (a) {
 //         console.log(a.copyright);
