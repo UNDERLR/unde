@@ -50,7 +50,6 @@ body {
     position: relative;
     max-width: 30vw;
     overflow: hidden;
-    
 }
 
 body {
@@ -77,4 +76,38 @@ fieldset div {
     margin: 0.5em;
     height: 2em;
     width: 2em;
+}
+
+fieldset {
+    min-width: 10vw;
+}
+
+fieldset input {
+    width: 80%;
+}
+
+.span {
+    width: 80%;
+    height: 1px;
+    background-color: #aaaaaa;
+    display: block;
+    margin: auto;
+}
+table {
+    margin: auto;
+    width: 80%;
+}
+tr{
+    width: 100%;
+}
+td {
+    width: 30%;
+    height: 5em;
+    margin: 10%;
+    text-align: center;
+}
+embed {
+    height: 3em;
+    display: block;
+    margin: auto;
 }

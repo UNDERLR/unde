@@ -20,45 +20,41 @@ let Win = {
     Scale: 1,
 };
 
-function fun(t) {
-    if (/x\^2/g.test(t)) {
-        let n = t.replace(/-/g, "+-").split("+");
-        if (/^-/.test(t)) n.shift();
-        n[0] = n[0].replace("-x^2", "-1").replace(/^x\^2/, "1").replace(/x\^2/, "");
-        n[1] = n[1].replace("x", "");
-        if (n[0] === undefined) n[0] = 0;
-        if (n[1] === undefined) n[1] = 0;
-        if (n[2] === undefined) n[2] = "";
+let Draw = {
+    Resolution: 2,
+    StrokeColor: "blue",
+};
 
-        n[1] = n[1] / (n[0] * 2);
-        n[2] = (4 * n[0] * n[2] - Math.pow(n[1], 2)) / (4 * n[0]);
-        func = n;
-        // a(2, func[0], func[1], func[2]);
+let Funs = {
+    1: "",
+};
 
-        n[1] > 0 ? (n[1] = "+" + n[1]) : (n[1] = n[1]);
-        n[2] > 0 ? (n[2] = "+" + n[2]) : (n[2] = n[2]);
-        if (n[1] === 0) n[1] = "+" + n[1];
+function fun() {
+    
+    let canvas = document.getElementById("canvas");
+    let can = canvas.getContext("2d");
+    let t = Funs[1];
+    t = t.replace(/\^/g, "**");
+    t = t.replace(/(?<=\d)x/g, "*x");
+    t = t.replace(/(?<=\d)\(/g, "*(");
+    can.beginPath();
+    can.lineWidth = "5";
+    can.strokeStyle = Draw.StrokeColor;
+    let x = Win.translate.X - window.outerWidth ;
+    can.moveTo(Win.translate.X - window.outerWidth , eval(t) * -1);
 
-        document.getElementById("dds").value = `${n[0]}(x${n[1]})^2${n[2]}`;
-    } else if (/\)\^2/g.test(t)) {
-        let n = t
-            .replace(/\(/g, "|")
-            .replace(/(\)\^2)/g, "|")
-            .split("|"); //
+    for (let x = Win.translate.X - window.outerWidth ; x < Win.translate.X + window.outerHeight ; ) {
+        let y = eval(t);
 
-        if (n[0] === "") {
-            n[0] = 1;
-        } else if (n[0] === "-") n[0] = n[0].replace(/-/, "-1");
-        n[1] = n[1].replace(/x\+?/, "");
-        n[2] = n[2].replace(/\+/, "");
+        can.lineTo(x, y * -1);
+        // console.log(y);
 
-        func = n;
-        // a(2, func[0], func[1], func[2]);
-    } else {
+        x += Draw.Resolution;
     }
+    can.stroke();
 }
 
-function canvas() {
+function canvas(m) {
     // 侧边栏
     var startX, startWidth;
     startWidth = localStorage.getItem("scalable_width") || getScalableDivWidth();
@@ -127,7 +123,7 @@ function canvas() {
         //初始化
         can.strokeStyle = "black";
         can.fillStyle = "#ffffff";
-        can.fillRect(-10000 + Win.translate.X, -10000+ Win.translate.Y, 20000 + Win.translate.X, 20000 + Win.translate.Y);
+        can.fillRect(-10000 + Win.translate.X, -10000 + Win.translate.Y, 20000 + Win.translate.X, 20000 + Win.translate.Y);
         can.font = "bolder 24px Times New Roman";
         //坐标系
 
@@ -305,6 +301,7 @@ function canvas() {
         can.fillText("O", 20, -10);
         can.fillText("x", window.outerWidth / 2 - (a + Axis.Margin + document.getElementsByClassName("separator").item(0).offsetWidth), -10);
         can.fillText("y", 20, (window.outerHeight / 2) * -1 + 10 + Axis.Margin);
+        fun();
     }
     draw(document.getElementById("content").offsetWidth);
 }
