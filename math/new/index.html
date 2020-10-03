@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>一元二次方程</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+    </head>
+    <body>
+        <div class="scalable">
+            <div class="content">
+                <div class="func"><canvas id="canvas"></canvas></div>
+            </div>
+            <div class="separator"><i></i><i></i></div>
+        </div>
+
+        <div class="main">
+            <div class="content" id="content" style="padding: 1vw">
+                <div class="scale" id="scale">
+                    <div>+</div>
+                    <div>1.0</div>
+                    <div>-</div>
+                </div>
+                <fieldset>
+                    <legend>表达式</legend>
+                    <div>一般式</div>
+                    <div><label for="ybs">y=</label><input value="x^2+x+1" placeholder="ax^2+bx+c" type="text" id="ybs" oninput="this.value=this.value.replace(/[^0-9.x^+\-]/g,'');fun(this.value)" /></div>
+                    <div>顶点式</div>
+                    <div><label for="dds">y=</label><input placeholder="a(x+h)^2+k" type="text" id="dds" oninput="this.value=this.value.replace(/[^0-9x^+\-.\(\)]/g,'');fun(this.value)" /></div>
+                </fieldset>
+            </div>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
