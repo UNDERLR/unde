@@ -1,10 +1,31 @@
 let cla = {
-    bu: [24, 25, 31, 10, 11],
-    jia: [1, 2, 3, 4, 17, 18],
+    bu: [1, 7, 8, 21, 22, 28, 29],
+    jia: [14, 15],
 };
 
+function mod(m) {
+    switch (m) {
+        case "day":
+            document.cookie = "mod=day; expires=Thu, 18 Dec 2040 12:00:00 GMT; path=/";
+            document.documentElement.style.setProperty("--headerColor", "#99d893");
+            document.documentElement.style.setProperty("--mainFontColor", "#000");
+            document.documentElement.style.setProperty("--backGroundColor", "#fff");
+            document.documentElement.style.setProperty("--isDisplay", 1);
+            break;
+        case "night":
+            document.cookie = "mod=night; expires=Thu, 18 Dec 2040 12:00:00 GMT; path=/";
+            document.documentElement.style.setProperty("--headerColor", "#555");
+            document.documentElement.style.setProperty("--mainFontColor", "#fff");
+            document.documentElement.style.setProperty("--backGroundColor", "rgba(34, 34, 34)");
+            document.documentElement.style.setProperty("--isDisplay", 0);
+            break;
+
+        default:
+            break;
+    }
+}
+
 let a = function () {
-    
     window.addEventListener("scroll", (e) => scr(e));
 
     function getMonthDays(year, month) {
@@ -12,8 +33,30 @@ let a = function () {
         return thisDate.getDate();
     }
 
+    function getMod(c) {
+        c = `{"${c.replace(/=/g, '":"')}"}`;
+        if (/;/.test(c)) c = c.replace(/;/g, '","');
+        let o = JSON.parse(c);
+        console.log(o);
+        switch (o.mod) {
+            case "day":
+                document.querySelector("#day").checked = true;
+                mod("day");
+                break;
+            case "night":
+                document.querySelector("#night").checked = true;
+                mod("night");
+                break;
+
+            default:
+                mod("day");
+                break;
+        }
+    }
+    getMod(document.cookie);
     function scr(e) {
-        if (e.path[1].pageYOffset > 50) {
+        // document.querySelector("img.bg").style.top = e.path[1].pageYOffset + "px";
+        if (e.path[1].pageYOffset > window.innerHeight - window.innerHeight * 0.2) {
             document.querySelector("header").style.height = "5vh";
             document.querySelector("header").className = "";
         } else {
@@ -50,7 +93,7 @@ let a = function () {
                         day.className = "block jia";
                     } else if (i + 1 + 7 * b - firstDayInWeek + 1 <= getMonthDays(new Date().getFullYear(), new Date().getMonth() + 1)) {
                         day.className = "block ke";
-                } else day.className = "block";
+                    } else day.className = "block";
                     line.appendChild(day);
                 }
             }

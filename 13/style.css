@@ -2,19 +2,47 @@
     padding: 0;
     margin: 0;
     line-height: 1em;
+    /* transition: .5s; */
 }
 body {
     width: 100vw;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: var(--backGroundColor);
 }
 main {
+    position: relative;
+    z-index: 5;
     width: 100vw;
     height: 200vh;
+    background-color: var(--backGroundColor);
 }
+
+main,
+main *,
+body {
+    transition: 0.5s;
+}
+
 :root {
-    --headerColor: #29b7cb;
+    --fontColor: #ffffff;
+    --mainFontColor: #000000;
+    --headerColor: #99d893;
     --dateListColor: #d0dfe6;
+    --backGroundColor: #ffffff;
+    --isDisplay: 1;
+}
+/* 夜间 */
+main * {
+    color: var(--mainFontColor);
+}
+.headBgImg,
+.headBgImgGradient {
+    transition: 0.5s;
+    opacity: var(--isDisplay);
+}
+canvas {
+    position: fixed;
 }
 /* 折叠 */
 div a + .content {
@@ -57,7 +85,7 @@ header.top:hover {
 }
 /* 顶栏-左 */
 header div.left {
-    color: #fff;
+    color: var(--fontColor);
 
     display: flex;
     align-items: center;
@@ -71,7 +99,7 @@ header div.left {
 }
 /* 顶栏-中 */
 header div.center {
-    color: #fff;
+    color: var(--fontColor);
 
     display: flex;
     align-items: center;
@@ -96,7 +124,8 @@ header div.right {
     min-width: 20vw;
     height: 100%;
 }
-header div.right div a {
+header div.right div a,
+header div.right div .a {
     display: block;
 
     background-color: transparent;
@@ -134,8 +163,24 @@ div.headImg {
         transform: scale(1.25, 1.25);
     }
 }
-div.headImg img.bg {
+.headBg {
     position: absolute;
+    background-color: #000000;
+    z-index: -5;
+}
+div.headBgImgGradient {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+
+    background-image: linear-gradient(#ffffff00 50%, #ffffff);
+}
+div.headImg img.bg {
+    background-image: url(https://api.dujin.org/bing/1920.php);
+    background-attachment: fixed;
+    position: fixed;
+    left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
     animation: scale 60s infinite ease-in-out;
@@ -146,14 +191,41 @@ div.headImg div.headContent {
     justify-content: center;
     align-items: center;
 
-    background-image: linear-gradient(#ffffff00, #fff);
     width: 100%;
     height: 100%;
 }
-
+div.headImg div.headContent > div {
+    user-select: none;
+    font-size: 2em;
+    padding: 1.5em;
+    transition: 0.5s;
+    color: var(--fontColor);
+    position: absolute;
+    z-index: 5;
+    min-width: 10vw;
+    min-height: 10vh;
+}
+div.headImg div.headContent > div .more {
+    text-align: right;
+    opacity: 0;
+    transition: 0.5s;
+}
+div.headImg div.headContent > div:hover .more {
+    opacity: 1;
+}
+div.headImg div.headContent > div:hover {
+    background-color: rgba(83, 83, 83, 0.637);
+}
+.content {
+    font-size: 2em;
+    line-height: 2em;
+}
+div.headImg div.headContent > div .more * {
+    line-height: 1.3em;
+}
 /* 内容 */
-main > div:not(.headImg) {
-    margin-top: 5vw;
+main h1 {
+    padding: 5vw 0;
 }
 /* 标题 */
 h1 {
@@ -183,7 +255,7 @@ h1 {
     height: 2em;
     margin: 0.1em;
 
-    transition: .3s ease-in-out;
+    transition: 0.3s ease-in-out;
 }
 .block:hover {
     background-color: var(--dateListColor);
@@ -205,10 +277,10 @@ h1 {
     height: 2em;
     margin: 0.1em;
 
-    box-shadow: #0000002d 0 0 .5vw .5vw;
-
+    box-shadow: #0000002d 0 0 0.5vw 0.5vw;
 }
 /* 日历 */
+
 main .dateList > div {
     width: 50vw;
     margin: 10vh auto;
@@ -219,6 +291,9 @@ main .dateList > div {
 }
 main .dateList > div .block {
     transform: scale(1.5, 1.5);
+}
+.dateList > div .block:hover {
+    transform: scale(2, 2);
 }
 header .dateList > div {
     width: 30vw;
@@ -245,4 +320,47 @@ header .dateList > div {
     color: #525288;
     position: absolute;
     transform: translate(120%, -120%);
+}
+/* 模式切换 */
+input[type="radio"] {
+    display: none;
+}
+.mod label {
+    display: none;
+}
+.mod input:checked + label {
+    display: block;
+}
+/* 每日一语 */
+.dailyList > div {
+    width: 60vw;
+    min-height: 10vh;
+    margin: auto;
+}
+/* 分割线 */
+div.span {
+    height: 2vw;
+    position: relative;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.span div {
+    position: absolute;
+    padding: 0.5em 0;
+    z-index: 1;
+    background-color: var(--backGroundColor);
+    user-select: none;
+}
+div.span span {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 0;
+    width: 100%;
+    height: 5px;
+    background-color: lightgray;
 }
