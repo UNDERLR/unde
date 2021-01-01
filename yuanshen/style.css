@@ -1,0 +1,111 @@
+* {
+    padding: 0;
+    margin: 0;
+    line-height: 1em;
+    font-size: 1.06em;
+    outline: none;
+}
+body {
+    overflow: hidden;
+}
+.header {
+    width: 100vw;
+    height: 9vh;
+}
+.main {
+    display: flex;
+    width: 100vw;
+    height: 75vh;
+}
+.footer {
+    width: 100vw;
+    height: 16vh;
+    display: flex;
+}
+.footer > div {
+    height: 100%;
+}
+.wishButtonBox {
+    padding-left: 16vw;
+    padding-top: 6vh;
+    flex: 1;
+}
+.wishButtonBox > button {
+    margin-right: 1em;
+    width: 342px;
+    height: 77px;
+    border: none;
+    background-color: transparent;
+    background-image: url("./img/text.png");
+    background-position: 0 0;
+}
+
+.wishButtonBox > button > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightButtonBox,
+.leftButtonBox {
+    flex: 1;
+}
+.keqing {
+    position: relative;
+}
+.view {
+    flex: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bg {
+    background-image: url("./img/bg.png");
+    height: 100vh;
+    width: 100vw;
+}
+
+.info {
+    padding-left: 3em;
+    padding-top: 9vh;
+    flex: 1;
+}
+.info button {
+    border: none;
+    height: 2em;
+    width: 8em;
+    border-radius: 1em;
+    font-weight: 600;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.05);
+    margin-right: 0.5em;
+}
+div.x {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    background-image: url("./img/x.png");
+    background-size: cover;
+}
+.video {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+}
+.end {
+    padding: 1em 2em;
+    border: none;
+    background-color: transparent;
+    font-size: 2em;
+    color: #fff;
+    position: fixed;
+    z-index: 1;
+    right: 5vw;
+    top: 5vh;
+}
+.res {
+    height: 100vh;
+    background-color: #fff;
+}
