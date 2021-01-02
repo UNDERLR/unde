@@ -6,11 +6,12 @@
         <title>原神</title>
         <link rel="stylesheet" href="style.css" />
         <script src="index.js"></script>
+        <script src="./javascript/imgLink.js"></script>
     </head>
     <body onload="">
         <div class="video" style="display: none; position: relative">
             <button class="end" onclick='document.querySelector(".video>video").style.display="none";document.querySelector(".video>video").pause();document.querySelector(".video>video").currentTime = 0;'>跳过</button>
-            <video src="./video/三星B.mp4"></video>
+            <video src="./video/三星-单.mp4"></video>
             <div class="res" onclick='document.querySelector(".video").style.display = "none";document.querySelector(".video>.res").innerHTML=""'></div>
         </div>
 
@@ -43,6 +44,8 @@
                 <div class="info">
                     <button class="more">详情</button>
                     <button class="his">历史记录</button>
+                    <button>重置次数</button>
+                    <button onclick="launchIntoFullscreen(document.documentElement);">全屏</button>
                 </div>
                 <div class="wishButtonBox">
                     <button class="keqingWish o" onclick="wish(1,3)">
@@ -64,7 +67,7 @@
         </div>
 
         <audio autoplay loop>
-            <source src="./sound/陈致逸,HOYO-MiX - Statue of the Seven 七天神像.mp3" />
+            <!-- <source src="./sound/陈致逸,HOYO-MiX - Statue of the Seven 七天神像.mp3" /> -->
         </audio>
     </body>
 </html>
