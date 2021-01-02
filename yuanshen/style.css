@@ -4,6 +4,8 @@
     line-height: 1em;
     font-size: 1.06em;
     outline: none;
+    cursor: url(./img/y.png), auto;
+    user-select: none;
 }
 body {
     overflow: hidden;
@@ -67,7 +69,7 @@ body {
 .info {
     padding-left: 3em;
     padding-top: 9vh;
-    flex:3;
+    flex: 3;
 }
 .info button {
     border: none;
@@ -105,17 +107,93 @@ div.x {
     top: 5vh;
 }
 .res {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
-    background-color: #fff;
+    background-color: #2d57b1;
+    overflow-y: scroll;
 }
 .res > div {
-    margin: 5vw;
-    display: inline-block;
+    /* margin: 4vw; */
     overflow: hidden;
-    width: 10vw;
+    width: 7vw;
     height: 20vw;
+    transition: 0.2s;
 }
-.res >div>img{
+.res > div>div{
+    display: none;
+}
+.res > div > img {
     height: 100%;
     transform: translateX(-25%);
+}
+.res > div:hover {
+    width: 15vw;
+    transform: scale(1.2, 1.2);
+}
+.res > div.fi {
+    box-shadow: 0 0 5vw rgb(255, 230, 87);
+}
+.res > div.fo {
+    box-shadow: 0 0 5vw rgb(130, 72, 168);
+}
+.res > div.th {
+    box-shadow: 0 0 5vw rgb(102, 158, 180);
+}
+.vi {
+    position: fixed;
+    z-index: 2;
+}
+.vi > div {
+    height: 100vh;
+    width: 100vw;
+    /* background-color: #fff; */
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.vi > div > img {
+    height: 80%;
+}
+.vi > div:hover > img {
+    animation: img 1s ease-in-out;
+}
+.vi > div > div {
+    top: 1vh;
+    position: absolute;
+    color: transparent;
+    font-family: "songti";
+    font-weight: bolder;
+    font-size: 2.2em;
+}
+.vi > div:hover > div {
+    transition: 0.5s;
+    color: #fff;
+    transition-delay: 1.5s;
+}
+@keyframes img {
+    0% {
+        filter: brightness(0%);
+        transform: scale(2, 2) translateX(-20%);
+    }
+    30%,
+    80% {
+        filter: brightness(0%);
+        transform: scale(1, 1) translateX(-20%);
+    }
+    100% {
+        transform: scale(1, 1) translateX(0);
+        filter: brightness(100%);
+    }
+}
+.vi > div.fi {
+    background-image: linear-gradient(#424242, rgb(163, 172, 46));
+}
+.vi > div.fo {
+    background-image: linear-gradient(#444444, rgb(130, 104, 160));
+}
+.vi > div.th {
+    background-image: linear-gradient(#4b4b4b, rgb(46, 115, 172));
 }

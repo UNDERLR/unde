@@ -10,8 +10,12 @@
     </head>
     <body onload="">
         <div class="video" style="display: none; position: relative">
-            <button class="end" onclick='document.querySelector(".video>video").style.display="none";document.querySelector(".video>video").pause();document.querySelector(".video>video").currentTime = 0;'>跳过</button>
-            <video src="./video/三星-单.mp4"></video>
+            <div class="videoBox">
+                <video src="./video/三星-单.mp4"></video>
+                <button class="end" onclick='skip()'>跳过</button>
+            </div>
+
+            <div class="vi"></div>
             <div class="res" onclick='document.querySelector(".video").style.display = "none";document.querySelector(".video>.res").innerHTML=""'></div>
         </div>
 
@@ -67,7 +71,7 @@
         </div>
 
         <audio autoplay loop>
-            <source src="./sound/陈致逸,HOYO-MiX - Statue of the Seven 七天神像.mp3" />
+            <source src="./sound/七天神像.mp3" />
         </audio>
     </body>
 </html>
