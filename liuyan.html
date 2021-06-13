@@ -56,7 +56,7 @@
                 <input type="radio" name="to" id="to" onclick="o=false;document.getElementById('toname').innerHTML=to;document.getElementById('a').innerHTML='';document.getElementById('classmate').disabled=false;document.getElementById('teacher').disabled=true;out();" />
             </div>
             <div>
-                <input type="text" id="name" placeholder="请输入您的名字（必填）" oninput="name=this.value;out();document.getElementById('footer').innerHTML=this.value" />
+                <input type="text" id="name" placeholder="请输入您的名字（必填）" oninput="n=this.value;out();document.getElementById('footer').innerHTML=this.value" />
             </div>
         </section>
         <section class="content">
@@ -72,14 +72,14 @@
             let o = true;
             let tot = "语文老师";
             let to = "";
-            let name = "";
+            let n = "";
             function out() {
                 let op = document.getElementById("out");
                 let con = document.getElementById("content").value;
                 if (o === true) {
-                    op.value = `<div class="header">致<span class="a">亲爱的</span> <span class="toname">${tot}</span></div>\n<div class="content">${con}</div></div>\n<div class="footer">${name}</div>`;
+                    op.value = `<div class="header">致<span class="a">亲爱的</span> <span class="toname">${tot}</span></div>\n<div class="content">${con}</div></div>\n<div class="footer">${n}</div>`;
                 } else {
-                    op.value = `<div class="header">致 <span class="toname">${to}</span></div>\n<div class="content">${con}</div></div>\n<div class="footer">${name}</div>`;
+                    op.value = `<div class="header">致 <span class="toname">${to}</span></div>\n<div class="content">${con}</div></div>\n<div class="footer">${n}</div>`;
                 }
             }
         </script>
