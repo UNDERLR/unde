@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zn-ch">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>留言</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <style>
+            .person,
+            .content,
+            #output {
+                width: 80vw;
+                margin: 0 auto 10vw auto;
+                text-align: center;
+            }
+            .person > div {
+                display: flex;
+                margin: 1vw 0;
+            }
+            .person > div > #teacher,
+            .person > div > input[type="text"] {
+                flex: 1;
+            }
+
+            .content textarea,
+            #output textarea {
+                width: inherit;
+            }
+            .content .header {
+                width: inherit;
+                text-align: left;
+            }
+            .content .footer {
+                width: inherit;
+                text-align: right;
+            }
+        </style>
+        <section class="person">
+            <div>
+                <select name="teacher" id="teacher" onchange="tot=this.options[this.selectedIndex].text;document.getElementById('toname').innerHTML=tot">
+                    <option value="语文老师">语文老师</option>
+                    <option value="数学老师">数学老师</option>
+                    <option value="英语老师">英语老师</option>
+                    <option value="物理老师">物理老师</option>
+                    <option value="化学老师">化学老师</option>
+                    <option value="历史老师">历史老师</option>
+                    <option value="政治老师">政治老师</option>
+                </select>
+                <input type="radio" name="to" id="to" checked onclick="o=true;document.getElementById('toname').innerHTML=tot;document.getElementById('a').innerHTML='亲爱的';document.getElementById('classmate').disabled=true;document.getElementById('teacher').disabled=false;out();" />
+            </div>
+            <div>
+                <input type="text" name="classmate" id="classmate" oninput="to=this.value;document.getElementById('toname').innerHTML=this.value" placeholder="请输入同学的名字" disabled />
+                <input type="radio" name="to" id="to" onclick="o=false;document.getElementById('toname').innerHTML=to;document.getElementById('a').innerHTML='';document.getElementById('classmate').disabled=false;document.getElementById('teacher').disabled=true;out();" />
+            </div>
+            <div>
+                <input type="text" id="name" placeholder="请输入您的名字（必填）" oninput="name=this.value;out();document.getElementById('footer').innerHTML=this.value" />
+            </div>
+        </section>
+        <section class="content">
+            <div class="header">致<span id="a">亲爱的</span> <span id="toname">语文老师</span></div>
+            <textarea id="content" rows="10" oninput="out()" placeholder="请输入内容"></textarea>
+            <div class="footer" id="footer"></div>
+        </section>
+        <section id="output">
+            <textarea id="out" rows="10" placeholder="输出代码" disabled></textarea>
+            <button onclick="document.getElementById('out').disabled=false;document.getElementById('out').select();document.execCommand('Copy');document.getElementById('out').disabled=true;alert('复制成功，请将它私信发给我')">生成并复制</button>
+        </section>
+        <script>
+            let o = true;
+            let tot = "语文老师";
+            let to = "";
+            let name = "";
+            function out() {
+                let op = document.getElementById("out");
+                let con = document.getElementById("content").value;
+                if (o === true) {
+                    op.value = `<div class="header">致<span id="a">亲爱的</span> <span id="toname">${tot}</span></div>\n<div id="content">${con}</div></div>\n<div class="footer" id="footer">${name}</div>`;
+                } else {
+                    op.value = `<div class="header">致 <span id="toname">${to}</span></div>\n<div id="content">${con}</div></div>\n<div class="footer" id="footer">${name}</div>`;
+                }
+            }
+        </script>
+    </body>
+</html>
