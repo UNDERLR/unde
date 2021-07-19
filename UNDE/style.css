@@ -1,0 +1,396 @@
+* {
+    padding: 0;
+    margin: 0;
+    line-height: 1em;
+    /* transition: .5s; */
+}
+body {
+    width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: var(--backGroundColor);
+}
+main {
+    position: relative;
+    z-index: 5;
+    width: 100vw;
+    height: 200vh;
+    background-color: var(--backGroundColor);
+}
+
+main,
+main *,
+body {
+    transition: 0.5s;
+}
+
+:root {
+    --fontColor: #ffffff;
+    --mainFontColor: #000000;
+    --headerColor: #de1c31;
+    --dateListColor: #d0dfe6;
+    --backGroundColor: #ffffff;
+    --isDisplay: 1;
+}
+/* 夜间 */
+main * {
+    color: var(--mainFontColor);
+}
+.headBgImg,
+.headBgImgGradient {
+    transition: 0.5s;
+    opacity: var(--isDisplay);
+}
+canvas {
+    position: fixed;
+}
+/* 折叠 */
+div a + .content {
+    position: absolute;
+    top: 100%;
+
+    min-width: 10vw;
+    max-height: 0;
+
+    background-color: var(--headerColor);
+
+    overflow: hidden;
+
+    transition: 0.5s ease-in-out;
+    transform: translateX(-90%);
+
+    box-shadow: #000000;
+}
+
+div a:hover + .content,
+.content:hover {
+    max-height: 90vh;
+}
+/* 顶栏 */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: var(--headerColor);
+    z-index: 10;
+
+    transition: 0.5s ease-in-out;
+}
+header.top {
+    height: 8vh;
+    background-color: transparent;
+}
+header.top:hover {
+    background-color: var(--headerColor);
+}
+/* 顶栏-左 */
+header div.left {
+    color: var(--fontColor);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    position: absolute;
+    left: 5vw;
+    top: 0;
+    min-width: 20vw;
+    height: 100%;
+}
+/* 顶栏-中 */
+header div.center {
+    color: var(--fontColor);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    position: absolute;
+    left: 50%;
+    top: 0;
+    min-width: 20vw;
+    height: 100%;
+    transform: translateX(-50%);
+}
+/* 顶栏-右 */
+header div.right {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    position: absolute;
+    right: 5vw;
+    top: 0;
+    min-width: 20vw;
+    height: 100%;
+}
+header div.right div a,
+header div.right div .a {
+    display: block;
+
+    background-color: transparent;
+    user-select: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bolder;
+    font-size: 0.8vw;
+    color: #fff;
+    text-decoration: none;
+
+    border: #fff 3px solid;
+    border-radius: 20%;
+    outline: none;
+
+    width: 2em;
+    height: 2em;
+}
+/* 头图 */
+div.headImg {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+@keyframes scale {
+    0%,
+    100% {
+        transform: scale(1, 1);
+    }
+    50% {
+        transform: scale(1.25, 1.25);
+    }
+}
+.headBg {
+    position: absolute;
+    background-color: #000000;
+    z-index: -5;
+}
+div.headBgImgGradient {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+
+    background-image: linear-gradient(#ffffff00 70%, #ffffff);
+}
+div.headImg img.bg {
+    background-image: url(https://api.dujin.org/bing/1920.php);
+    background-attachment: fixed;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    animation: scale 60s infinite ease-in-out;
+    z-index: -1;
+}
+div.headImg div.headContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+div.headImg div.headContent > div {
+    user-select: none;
+    font-size: 2em;
+    padding: 1.5em;
+    transition: 0.5s;
+    color: var(--fontColor);
+    position: absolute;
+    z-index: 5;
+    min-width: 10vw;
+    min-height: 10vh;
+}
+div.headImg div.headContent > div .more {
+    text-align: right;
+    opacity: 0;
+    transition: 0.5s;
+}
+div.headImg div.headContent > div:hover .more {
+    opacity: 1;
+}
+div.headImg div.headContent > div:hover {
+    background-color: rgba(83, 83, 83, 0.637);
+}
+.content {
+    font-size: 2em;
+    line-height: 2em;
+}
+div.headImg div.headContent > div .more * {
+    line-height: 1.3em;
+}
+/* 内容 */
+main h1 {
+    padding: 5vw 0;
+}
+/* 标题 */
+h1 {
+    width: 100%;
+
+    text-align: center;
+    font-size: 4em;
+}
+/* 方块 */
+.block {
+    background-color: transparent;
+    user-select: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bolder;
+    font-size: 0.8vw;
+    color: var(--dateListColor);
+    text-decoration: none;
+
+    border: var(--dateListColor) 3px solid;
+    /* border-radius: 20%; */
+
+    width: 2em;
+    height: 2em;
+    margin: 0.1em;
+
+    transition: 0.3s ease-in-out;
+}
+.block:hover {
+    background-color: var(--dateListColor);
+    user-select: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bolder;
+    font-size: 0.8vw;
+    color: var(--headerColor);
+    text-decoration: none;
+
+    border: var(--headerColor) 3px solid;
+    /* border-radius: 20%; */
+
+    width: 2em;
+    height: 2em;
+    margin: 0.1em;
+
+    box-shadow: #0000002d 0 0 0.5vw 0.5vw;
+}
+/* 日历 */
+
+main .dateList > div {
+    width: 50vw;
+    margin: 10vh auto;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+main .dateList > div .block {
+    transform: scale(1.5, 1.5);
+}
+.dateList > div .block:hover {
+    transform: scale(2, 2);
+}
+header .dateList > div {
+    width: 30vw;
+    margin: 5vh auto;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+/* 模式切换 */
+input[type="radio"] {
+    display: none;
+}
+.mod label {
+    display: none;
+}
+.mod input:checked + label {
+    display: block;
+}
+/* 每日一语 */
+.dailyList > div {
+    width: 60vw;
+    min-height: 10vh;
+    margin: auto;
+}
+/* 分割线 */
+div.span {
+    height: 2vw;
+    position: relative;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.span div {
+    position: absolute;
+    padding: 0.5em 0;
+    z-index: 1;
+    background-color: var(--backGroundColor);
+    user-select: none;
+}
+div.span span {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 0;
+    width: 100%;
+    height: 5px;
+    background-color: lightgray;
+}
+
+.ui {
+    position: fixed;
+    z-index: 10;
+}
+
+.ui > div {
+    transition: 0.5s;
+    transform: translateX(calc((100% - 3vw) * -1));
+    position: relative;
+    display: flex;
+}
+
+.ui > div > .view {
+    border-radius: 0 20% 20% 0;
+    background-color: var(--headerColor);
+    width: 3vw;
+    height: 3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ui > div > .view > svg {
+    width: 2vw;
+    height: 2vw;
+}
+
+.ui > div:hover {
+    transform: translate(0);
+}
+.ui * {
+    fill: var(--fontColor) !important;
+    color: var(--fontColor) !important;
+}
+.ui > div > .main {
+    overflow: hidden;
+    background-color: var(--headerColor);
+}
+/* ui */
+.ui > .music {
+    position: relative;
+    top: 10vw;
+}
+.ui > .music > .main {
+    width: 20vw;
+    height: 5vw;
+}

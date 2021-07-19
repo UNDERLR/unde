@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            * {
+                /* fill: #ffffff; */
+            }
+        </style>
+    </head>
+    <body>
+        <audio autoplay>
+            <source src="" type="audio/mp3" onload="" />
+            <p>你的浏览器不支持 HTML5 音频，可点击<a href="" onload="">此链接</a>收听。</p>
+        </audio>
+        <script>
+            function getQueryString(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                let r = window.location.search.substr(1).match(reg);
+                if (r != null) {
+                    return decodeURIComponent(r[2]);
+                }
+                return null;
+            }
+            function getString(name, txt) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                let r = txt.match(reg);
+                r = r[2].replace(`${name}=`, "");
+                if (r != null) {
+                    return decodeURIComponent(r);
+                }
+                return null;
+            }
+            const source = document.querySelector("source");
+            const a = document.querySelector("a");
+            let s;
+            // let u = ;
+            let l = JSON.parse(getQueryString("list"));
+            // console.log(getQueryString("src"));
+            // let s ="../music/陈致逸,HOYO-MiX - Another Hopeful Tomorrow 希望的明日.mp3";
+            if (l !== null) {
+                s = encodeURI(l.shift());
+                l.push("")
+
+                console.log(s);
+                source.src = getString("src", s);
+                a.href = getString("src", s);
+            } else {
+                s = getQueryString("src");
+                source.src = s;
+                a.href = s;
+            }
+        </script>
+        <main>
+            <div class="name" style="width: 100%">
+                <div class="song"></div>
+                <style>
+                    .song {
+                        overflow: hidden;
+                        width: 100%;
+                        height: 1.5em;
+                        text-align: center;
+                    }
+                </style>
+            </div>
+            <div class="playing">
+                <style>
+                    .playing {
+                        display: flex;
+                    }
+                    #range {
+                        flex: 4;
+                    }
+                    .nowCurrentTime,
+                    .duration {
+                        flex: 1;
+                        text-align: center;
+                    }
+                </style>
+                <div class="nowCurrentTime"></div>
+                <input type="range" id="range" style="width: 20vw" min="0" step="0.0001" oninput="document.querySelector('audio').currentTime=this.value" />
+                <div class="duration"></div>
+            </div>
+            <div class="uiPlayer">
+                <div class="isplay">
+                    <style>
+                        .uiPlayer {
+                            position: relative;
+                        }
+                        .isplay {
+                            width: 100%;
+                            position: absolute;
+                            display: flex;
+                            justify-content: center;
+                            /* left: 50%; */
+                            /* transform: translateX(-50%); */
+                        }
+                        .uiPlayer > div {
+                            width: 100%;
+                            display: flex;
+                        }
+                        .buttonBox {
+                            flex: 1;
+                            position: relative;
+                            --bw: 1.5em;
+                            height: var(--bw);
+                            width: var(--bw);
+                            overflow: hidden;
+                        }
+                        .buttonBox > div {
+                            display: flex;
+                            position: absolute;
+                            width: var(--bw);
+                            height: 100%;
+                            overflow: hidden;
+                            right: 0;
+                            transition: 0.2s;
+                        }
+                        .buttonBox > div:hover {
+                            background-color: rgba(0, 0, 0, 0.418);
+                        }
+                        .buttonBox > div svg {
+                            height: var(--bw);
+                            width: var(--bw);
+                        }
+                        .buttonBox > div > div {
+                            transition: 0.3s;
+                        }
+                        .buttonBox.false > div > div {
+                            transform: translateX(-100%);
+                        }
+
+                        .voice {
+                            flex: 1;
+                            margin-left: 2vw;
+                            --vw: 2em;
+                            min-width: (var(--vw));
+                            height: var(--vw);
+                            display: flex;
+                        }
+                        .vicon {
+                            display: inline-block;
+                        }
+                        .vicon svg {
+                            transform: translateY(-10%);
+                            width: var(--vw);
+                            height: var(--vw);
+                        }
+                        .vd {
+                            margin-left: 0.5vw;
+                            position: relative;
+                            background-color: rgba(0, 0, 0, 0.473);
+                            border-radius: 0.5vw;
+                            display: flex;
+                            width: 0vw;
+                            height: inherit;
+                            transition: 0.5s;
+                            overflow: hidden;
+                        }
+
+                        .vicon:hover + .vd,
+                        .vd:hover {
+                            width: 50%;
+                        }
+                        .vv {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            flex: 1;
+                            text-align: center;
+                            width: 2em;
+                        }
+                        #voice {
+                            width: 12vw;
+                            flex: 4;
+                        }
+                    </style>
+                    <div class="buttonBox" onclick="this.classList.toggle('false');if (document.querySelector('.false')) {audio.pause();} else audio.play();">
+                        <div class="button">
+                            <div>
+                                <svg t="1612410425489" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2171" width="200" height="200"><path d="M142.293 0h22.261q77.913 0 77.913 77.913v868.174q0 77.913-77.913 77.913h-22.26q-77.914 0-77.914-77.913V77.913Q64.38 0 142.293 0zM810.12 0h22.26q77.913 0 77.913 77.913v868.174q0 77.913-77.913 77.913h-22.26q-77.913 0-77.913-77.913V77.913Q732.207 0 810.12 0z" fill="#666666" p-id="2172"></path></svg>
+                            </div>
+                            <div>
+                                <svg t="1612410447186" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1657" width="200" height="200"><path d="M847.462 598.016l-587.161 378.88A102.4 102.4 0 0 1 102.4 890.88V133.12a102.4 102.4 0 0 1 157.9-86.016l587.162 378.88a102.4 102.4 0 0 1 0 172.032z" fill="#666666" p-id="1658"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="voice">
+                        <div class="vicon">
+                            <svg t="1612412127243" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2997" width="200" height="200">
+                                <path d="M689.085 335.699c-18.785-18.785-49.239-18.785-68.023 0s-18.785 49.239 0 68.023c56.355 56.355 56.355 147.717 0 204.069-18.785 18.785-18.785 49.239 0 68.023 18.785 18.785 49.239 18.785 68.023 0 93.92-93.92 93.92-246.199 0-340.125z m-225.25-176.264L258.597 313.366H130.261c-35.674 0-64.067 28.451-64.067 63.543V634.63c0 34.619 28.684 63.543 64.067 63.543h128.336l205.238 153.931c28.537 21.398 51.299 9.69 51.299-25.82V185.257c0-35.062-22.971-47.065-51.299-25.82z" fill="#8A8A8A" p-id="2998"></path>
+                                <path d="M825.132 199.656c-18.785-18.785-49.239-18.785-68.023 0s-18.785 49.239 0 68.023c131.492 131.492 131.492 344.682 0 476.174-18.785 18.785-18.785 49.239 0 68.023 18.785 18.785 49.239 18.785 68.023 0v-0.001c169.06-169.06 169.06-443.158 0-612.221z" fill="#8A8A8A" p-id="2999"></path>
+                            </svg>
+                        </div>
+                        <div class="vd">
+                            <input type="range" id="voice" min="0" max="100" step="1" oninput="document.querySelector('.vv').innerHTML=this.value;document.querySelector('audio').volume=this.value/100" />
+                            <span class="vv">00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script>
+            const audio = document.querySelector("audio");
+            const nowCurrentTime = document.querySelector(".nowCurrentTime");
+            const duration = document.querySelector(".duration");
+            const range = document.querySelector("#range");
+            const buttonBox = document.querySelector(".buttonBox");
+
+            audio.volume = 0.2;
+
+            window.setInterval((event) => {
+                if (audio.ended === true) {
+                    window.location.href = `../doc/player.html?list=${JSON.stringify(l)}`;
+                }
+
+                document.querySelectorAll("*").forEach(
+                    (e) =>
+                        function (e) {
+                            e.style.color = "#" + getQueryString("color");
+                            e.style.fill = "#" + getQueryString("fillColor");
+                        }
+                );
+
+                document.querySelector(".vv").innerHTML = Math.floor(audio.volume * 100);
+                document.querySelector("#voice").value = Math.floor(audio.volume * 100);
+
+                if (audio.paused === false) {
+                    buttonBox.classList.remove("false");
+                } else buttonBox.classList.add("false");
+
+                let m = function (n) {
+                    let o = ["", "", ""];
+                    let a = Math.floor(n * 1);
+                    o[0] = Math.floor(a / 3600) + "";
+                    if (o[0].length === 1) o[0] = "0" + o[0];
+
+                    o[1] = Math.floor((a % 3600) / 60) + "";
+                    if (o[1].length === 1) o[1] = "0" + o[1];
+
+                    o[2] = ((a % 3600) % 60) + "";
+                    if (o[2].length === 1) o[2] = "0" + o[2];
+                    return o;
+                };
+                // name
+                // const sr = audio.currentSrc.split("/");
+                // document.querySelector(".song").innerHTML = decodeURI(sr[sr.length - 1].replace(/(\..*)$/g, ""));
+                document.querySelector(".song").innerHTML = getQueryString("title")||getString("title",s);
+
+                // playing
+                let now = m(audio.currentTime);
+                nowCurrentTime.innerHTML = `${now[0]}:${now[1]}:${now[2]}`;
+                range.value = audio.currentTime;
+                range.max = audio.duration;
+                let n = m(audio.duration);
+                duration.innerHTML = `${n[0]}:${n[1]}:${n[2]}`;
+
+                // console.log(audio.currentTime);
+            }, 50);
+            // audio.play();
+        </script>
+    </body>
+</html>
