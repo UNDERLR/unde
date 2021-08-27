@@ -1,62 +1,31 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" 
-            content="width=device-width, initial-scale=1.0, max=imum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-        <title>canvas</title>
-        <link rel="stylesheet" href="style.css">
-        <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js'></script>   
-        
-    </head>
-    <body>
-        <main>
-            <div class='output'>
-                <div class='re'>
-                    <div class='in'>
-                        <div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <span></span>
-                    </div>
-                    <div class='ou'>
-                        <div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <span></span>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>命令</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<section class="input">
+    <section class="grammer"></section>
+    <section class="main">
+        <div class="tip" id="inputTip">
+            <span id="span"></span>
+            <div id="tipDisplay">
+                <ul style="opacity: 0;">
+
+                </ul>
             </div>
-            <div class='input'>
-                <input type='text'/>
-                <button>
-                <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                    <rect 
-                        x='24'
-                        y='4'
-                        width='10'
-                        height='20'
-                        fill='gray'
-                    ></rect>
-                    <rect 
-                        x='10'
-                        y='14'
-                        width='20'
-                        height='10'
-                        fill='gray'
-                    ></rect>
-                    <polygon 
-                        points='10,8 0,20 10,32 20,32 10,20 20,8'
-                        fill='gray'
-                    />
-                </svg>
-                </button>
-            </div>
-        </main>
-        <script src="index.js"></script>
-    </body>
+        </div>
+        <div class="view" id="inputView"></div>
+        <input type="text" id="input" autocomplete="off"/>
+    </section>
+    <section class="autoOpenWiki">
+        <iframe frameborder="0" scrolling="0"></iframe>
+    </section>
+</section>
+</body>
+<script src="grammer.js"></script>
+<script src="index.js"></script>
 </html>
